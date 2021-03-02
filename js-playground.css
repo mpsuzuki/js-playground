@@ -1,0 +1,9 @@
+@font-face {
+  font-display: "swap";
+  font-family: "Ricty Diminished";
+  src: local("Ricty Diminished"),
+       url("RictyDiminished-Regular.woff") format("woff2");
+}
+textarea {
+  font-family: "Ricty Diminished";
+}
