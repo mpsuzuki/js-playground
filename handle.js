@@ -41,7 +41,7 @@ document.getElementById("take-snapshot").addEventListener("click", function(){
 
   var elmOption = document.createElement("option");
   elmOption.textContent = [k.substr(0,4), k.substr(4,2), k.substr(6,2)].join("/") + "-" +
-                          [k.substr(8,2), k.substr(10,2), k.substr(12,2)].join("/");
+                          [k.substr(8,2), k.substr(10,2), k.substr(12,2)].join(":");
   elmOption.setAttribute("data-snapshot", encodeURIComponent(jsText));
 
   var elmSELECT = document.getElementById("revert-snapshot");
