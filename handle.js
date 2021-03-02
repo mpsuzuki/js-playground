@@ -89,3 +89,16 @@ window.addEventListener("load", function(){
   });
   elmSELECT.selectedIndex = elmSELECT.children.length - 1;
 });
+
+document.getElementById("code-text").addEventListener("keydown",function(evt){
+
+  // based on the sample on http://www.webclap-dandy.com/?category=Programing&id=5
+
+  if (evt.keyCode != 9) { return; }; 
+  evt.preventDefault();
+  var cursorPos = evt.target.selectionStart; 
+  var cursorBefore = evt.target.value.substr(0, cursorPos); 
+  var cursorAfter = evt.target.value.substr(cursorPos, evt.target.value.length); 
+  evt.target.value = cursorBefore + "\t" + cursorAfter;
+  evt.target.selectionEnd = cursorPos + 1;
+});
