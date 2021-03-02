@@ -29,20 +29,19 @@ document.getElementById("download-anchor").addEventListener("click", function(ev
 
 document.getElementById("take-snapshot").addEventListener("click", function(){
   var dt = new Date();
-  var dateTimeStr = ("0000" + dt.getFullYear().toString()).slice(-4) +
-                    ("00" + (dt.getMonth() + 1).toString()).slice(-2) +
-                    ("00" + dt.getDate().toString()).slice(-2) +
-                     "-" +
-                    ("00" + dt.getHours().toString()).slice(-2) +
-                    ("00" + dt.getMinutes().toString()).slice(-2) +
-                     "." + 
-                    ("00" + dt.getSeconds().toString()).slice(-2);
+  var k = ("0000" + dt.getFullYear().toString()).slice(-4) +
+          ("00" + (dt.getMonth() + 1).toString()).slice(-2) +
+          ("00" + dt.getDate().toString()).slice(-2) +
+          ("00" + dt.getHours().toString()).slice(-2) +
+          ("00" + dt.getMinutes().toString()).slice(-2) +
+          ("00" + dt.getSeconds().toString()).slice(-2);
 
   var jsText = document.getElementById("code-text").value;
-  document.cookie = dateTimeStr + "=" + encodeURIComponent(jsText);
+  document.cookie = k + "=" + encodeURIComponent(jsText);
 
   var elmOption = document.createElement("option");
-  elmOption.textContent = dateTimeStr;
+  elmOption.textContent = [k.substr(0,4), k.substr(4,2), k.substr(6,2)].join("/") + "-" +
+                          [k.substr(8,2), k.substr(10,2), k.substr(12,2)].join("/");
   elmOption.setAttribute("data-snapshot", encodeURIComponent(jsText));
 
   var elmSELECT = document.getElementById("revert-snapshot");
@@ -70,17 +69,21 @@ window.addEventListener("load", function(){
   var elmSELECT = document.getElementById("revert-snapshot");
   var kvs = document.cookie.split(/;\s*/);
   while (kvs.length > 0) {
-    var toks = kvs.pop(0).split("=", 2);
-    var v = toks.pop();
-    var k = toks.pop();
-    if (k.match(/^[0-9]{8}-[0-9]{4}\.[0-9]{2}$/)) {
-      ks.push(k);
-      o[k] = v;
+    var akv = kvs.pop(0);
+    if (akv.length > 0) {
+      var toks = akv.split("=", 2);
+      var v = toks.pop();
+      var k = toks.pop();
+      if (k.match(/^[0-9]{14}$/)) {
+        ks.push(k);
+        o[k] = v;
+      };
     };
   };
   ks.sort().forEach(function(k){
     var elmOption = document.createElement("option");
-    elmOption.textContent = k;
+    elmOption.textContent = [k.substr(0,4), k.substr(4,2), k.substr(6,2)].join("/") + "-" +
+                            [k.substr(8,2), k.substr(10,2), k.substr(12,2)].join(":");
     elmOption.setAttribute("data-snapshot", v);
     elmSELECT.appendChild(elmOption);
   });
