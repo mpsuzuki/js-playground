@@ -102,3 +102,13 @@ document.getElementById("code-text").addEventListener("keydown",function(evt){
   evt.target.value = cursorBefore + "\t" + cursorAfter;
   evt.target.selectionEnd = cursorPos + 1;
 });
+
+document.getElementById("mark-space").addEventListener("click",function(evt){
+  var elmTextArea = document.getElementById("code-text");
+  elmTextArea.classList.toggle("visible-space");
+  if (elmTextArea.classList.contains("visible-space")) {
+    evt.target.value = "stop emphasize";
+  } else {
+    evt.target.value = "emphasize space";
+  };
+});

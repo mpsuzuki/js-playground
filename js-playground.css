@@ -1,7 +1,15 @@
 @font-face {
+  font-family: "DotLine";
+  src: url("DotLine.woff");
+  unicode-range: U+09, U+0A, U+20, U+3000;
+}
+@font-face {
   font-family: "RD-WOFF";
-  src: url("RictyDiminished-Regular.woff") format("woff2");
+  src: url("RictyDiminished-Regular.woff");
 }
 textarea {
   font-family: "Ricty Diminished", "RD-WOFF";
+}
+textarea.visible-space {
+  font-family: "DotLine", "Ricty Diminished", "RD-WOFF";
 }
