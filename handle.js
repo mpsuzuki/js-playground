@@ -12,7 +12,6 @@ document.getElementById("exec").addEventListener("click", function(){
     return /^[A-Za-z_][0-9A-Za-z_]*/.test(s);
   };
 
-
   /* to preserve the sequence of the file loading, the index i should be cared */
   var enqueFileReader = function(varName, csvFile, jsDataInits, i) {
     var promise = new Promise(function(fnResolve, fnReject) {
@@ -31,9 +30,7 @@ document.getElementById("exec").addEventListener("click", function(){
         };
 
         /* construct JavaScript string to set an array by JSON.stringify() */
-        jsDataInits[i]  = "var " + varName;
-        var jsstr = JSON.stringify(csvData);
-        jsDataInits[i] += " = JSON.parse('" + jsstr + "');";
+        jsDataInits[i]  = "var " + varName + " = " + JSON.stringify(csvData) + ";";
 
         fnResolve(csvFile.name);
       };
@@ -73,10 +70,22 @@ document.getElementById("exec").addEventListener("click", function(){
     elmSCRIPT.setAttribute("type", "text/javascript");
     elmSCRIPT.setAttribute("id", "on-the-fly");
     var jsText = document.getElementById("code-text").value;
+
+    var dataItems = document.querySelectorAll("div.output-data > div.data-item");
+    jsText += ";var spans = document.querySelectorAll('div.output-data > div.data-item > span');";
+    for (var i = 0; i < dataItems.length; i += 1) {
+      var input = dataItems[i].getElementsByTagName("input")[0];
+      var span = dataItems[i].getElementsByTagName("span")[0];
+      if (checkVariableNameSyntax(input.value)) {
+        jsText += "spans[" + i.toString() + "].textContent = " + input.value + ".toString();";
+      };
+    };
+
     var jsTextNode = document.createTextNode( jsDataInits.join(";\n") + jsText );
     elmSCRIPT.appendChild( jsTextNode );
     document.body.appendChild(elmSCRIPT);
   };
+
   Promise.all(jsDataPromises)
          .then(execJS, function(){
             console.log("some csv file could not be loaded\n");
