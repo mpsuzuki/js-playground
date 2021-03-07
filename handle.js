@@ -112,3 +112,51 @@ document.getElementById("mark-space").addEventListener("click",function(evt){
     evt.target.value = "emphasize space";
   };
 });
+
+document.getElementById("del-last").addEventListener("click",function(evt){
+  var items = document.querySelectorAll("#input-data > div.input-item");
+  var lastItem = items[items.length - 1];
+  lastItem.parentElement.removeChild(lastItem);
+});
+
+document.getElementById("add-var").addEventListener("click",function(evt){
+  var elmDivInputData = document.getElementById("input-data");
+  var cntItems = elmDivInputData.querySelectorAll("#input-data > div.input-item").length;
+
+  var elmDiv = document.createElement("div");
+  elmDiv.classList.add("input-item");
+  elmDiv.classList.add("var-name-value");
+  var elmInputVarName = document.createElement("input");
+  var elmInputVarValue = document.createElement("input");
+  elmInputVarName.setAttribute("type", "text");
+  elmInputVarValue.setAttribute("type", "text");
+  elmInputVarName.setAttribute("placeholder", "v" + cntItems.toString());
+  elmInputVarValue.setAttribute("placeholder", "3.14");
+  elmInputVarName.style.textAlign = "right";
+  elmInputVarName.style.width = "60pt";
+  elmInputVarValue.style.width = "120pt";
+  elmDiv.appendChild(elmInputVarName);
+  elmDiv.appendChild(document.createTextNode("="));
+  elmDiv.appendChild(elmInputVarValue);
+  elmDivInputData.appendChild(elmDiv);
+});
+
+document.getElementById("add-csv-file").addEventListener("click",function(evt){
+  var elmDivInputData = document.getElementById("input-data");
+  var cntItems = elmDivInputData.querySelectorAll("#input-data > div.input-item").length;
+
+  var elmDiv = document.createElement("div");
+  elmDiv.classList.add("input-item");
+  elmDiv.classList.add("var-name-file");
+  var elmInputVarName = document.createElement("input");
+  var elmInputVarFile = document.createElement("input");
+  elmInputVarName.setAttribute("type", "text");
+  elmInputVarFile.setAttribute("type", "file");
+  elmInputVarName.setAttribute("placeholder", "v" + cntItems.toString());
+  elmInputVarName.style.textAlign = "right";
+  elmInputVarName.style.width = "60pt";
+  elmDiv.appendChild(elmInputVarName);
+  elmDiv.appendChild(document.createTextNode("="));
+  elmDiv.appendChild(elmInputVarFile);
+  elmDivInputData.appendChild(elmDiv);
+});
