@@ -113,52 +113,93 @@ document.getElementById("mark-space").addEventListener("click",function(evt){
   };
 });
 
-document.getElementById("del-input-last").addEventListener("click",function(evt){
-  var items = document.querySelectorAll("#input-data > div.input-item");
-  if (items.length > 0) {
-    var lastItem = items[items.length - 1];
-    lastItem.parentElement.removeChild(lastItem);
-  };
+document.querySelectorAll("input.del-last").forEach(function(elm){
+  elm.addEventListener("click",function(evt){
+    var items = evt.target.parentElement.querySelectorAll("div.data-item");
+    if (items.length > 0) {
+      var lastItem = items[items.length - 1];
+      lastItem.parentElement.removeChild(lastItem);
+    };
+  });
 });
 
-document.getElementById("add-input-var").addEventListener("click",function(evt){
-  var elmDivInputData = document.getElementById("input-data");
-  var cntItems = elmDivInputData.querySelectorAll("#input-data > div.input-item").length;
+document.querySelectorAll("input.add-var-set").forEach(function(elm){
+  elm.addEventListener("click",function(evt){
+    var elmDivParent = evt.target.parentElement;
+    var cntItems = elmDivParent.querySelectorAll("div.data-item").length;
 
-  var elmDiv = document.createElement("div");
-  elmDiv.classList.add("input-item");
-  elmDiv.classList.add("var-name-value");
-  var elmInputVarName = document.createElement("input");
-  var elmInputVarValue = document.createElement("input");
-  elmInputVarName.setAttribute("type", "text");
-  elmInputVarValue.setAttribute("type", "text");
-  elmInputVarName.setAttribute("placeholder", "v" + cntItems.toString());
-  elmInputVarValue.setAttribute("placeholder", "3.14");
-  elmInputVarName.style.textAlign = "right";
-  elmInputVarName.style.width = "60pt";
-  elmInputVarValue.style.width = "120pt";
-  elmDiv.appendChild(elmInputVarName);
-  elmDiv.appendChild(document.createTextNode("="));
-  elmDiv.appendChild(elmInputVarValue);
-  elmDivInputData.appendChild(elmDiv);
+    var elmDiv = document.createElement("div");
+    elmDiv.classList.add("data-item");
+    elmDiv.classList.add("var-name-value-set");
+
+    var elmInputVarName = document.createElement("input");
+    elmInputVarName.setAttribute("type", "text");
+    elmInputVarName.setAttribute("placeholder", "v" + cntItems.toString());
+    elmInputVarName.style.textAlign = "right";
+    elmInputVarName.style.width = "60pt";
+    elmDiv.appendChild(elmInputVarName);
+
+    elmDiv.appendChild(document.createTextNode("="));
+
+    var elmInputVarValue = document.createElement("input");
+    elmInputVarValue.setAttribute("type", "text");
+    elmInputVarValue.setAttribute("placeholder", "3.14");
+    elmInputVarValue.style.width = "120pt";
+    elmDiv.appendChild(elmInputVarValue);
+
+    elmDivParent.appendChild(elmDiv);
+  });
 });
 
-document.getElementById("add-input-csv-file").addEventListener("click",function(evt){
-  var elmDivInputData = document.getElementById("input-data");
-  var cntItems = elmDivInputData.querySelectorAll("#input-data > div.input-item").length;
+document.querySelectorAll("input.add-var-get").forEach(function(elm){
+  elm.addEventListener("click",function(evt){
+    var elmDivParent = evt.target.parentElement;
+    var cntItems = elmDivParent.querySelectorAll("div.data-item").length;
 
-  var elmDiv = document.createElement("div");
-  elmDiv.classList.add("input-item");
-  elmDiv.classList.add("var-name-file");
-  var elmInputVarName = document.createElement("input");
-  var elmInputVarFile = document.createElement("input");
-  elmInputVarName.setAttribute("type", "text");
-  elmInputVarFile.setAttribute("type", "file");
-  elmInputVarName.setAttribute("placeholder", "v" + cntItems.toString());
-  elmInputVarName.style.textAlign = "right";
-  elmInputVarName.style.width = "60pt";
-  elmDiv.appendChild(elmInputVarName);
-  elmDiv.appendChild(document.createTextNode("="));
-  elmDiv.appendChild(elmInputVarFile);
-  elmDivInputData.appendChild(elmDiv);
+    var elmDiv = document.createElement("div");
+    elmDiv.classList.add("data-item");
+    elmDiv.classList.add("var-name-value-get");
+    var elmInputVarName = document.createElement("input");
+    elmInputVarName.setAttribute("type", "text");
+    elmInputVarName.setAttribute("placeholder", "v" + cntItems.toString());
+    elmInputVarName.style.textAlign = "right";
+    elmInputVarName.style.width = "60pt";
+    elmDiv.appendChild(elmInputVarName);
+
+    elmDiv.appendChild(document.createTextNode("="));
+
+    var elmSpanVarValue = document.createElement("span");
+    elmSpanVarValue.setAttribute("type", "text");
+    elmSpanVarValue.setAttribute("placeholder", "3.14");
+    elmSpanVarValue.style.width = "120pt";
+    elmDiv.appendChild(elmSpanVarValue);
+
+    elmDivParent.appendChild(elmDiv);
+  });
+});
+
+
+document.querySelectorAll("input.add-csv-file").forEach(function(elm){
+  elm.addEventListener("click",function(evt){
+    var elmDivParent = evt.target.parentElement;
+    var cntItems = elmDivParent.querySelectorAll("div.data-item").length;
+
+    var elmDiv = document.createElement("div");
+    elmDiv.classList.add("data-item");
+    elmDiv.classList.add("var-name-file");
+
+    var elmInputVarName = document.createElement("input");
+    elmInputVarName.setAttribute("type", "text");
+    elmInputVarName.setAttribute("placeholder", "v" + cntItems.toString());
+    elmInputVarName.style.textAlign = "right";
+    elmInputVarName.style.width = "60pt";
+    elmDiv.appendChild(elmInputVarName);
+
+    elmDiv.appendChild(document.createTextNode("="));
+
+    var elmInputVarFile = document.createElement("input");
+    elmInputVarFile.setAttribute("type", "file");
+    elmDiv.appendChild(elmInputVarFile);
+    elmDivParent.appendChild(elmDiv);
+  });
 });
