@@ -113,13 +113,15 @@ document.getElementById("mark-space").addEventListener("click",function(evt){
   };
 });
 
-document.getElementById("del-last").addEventListener("click",function(evt){
+document.getElementById("del-input-last").addEventListener("click",function(evt){
   var items = document.querySelectorAll("#input-data > div.input-item");
-  var lastItem = items[items.length - 1];
-  lastItem.parentElement.removeChild(lastItem);
+  if (items.length > 0) {
+    var lastItem = items[items.length - 1];
+    lastItem.parentElement.removeChild(lastItem);
+  };
 });
 
-document.getElementById("add-var").addEventListener("click",function(evt){
+document.getElementById("add-input-var").addEventListener("click",function(evt){
   var elmDivInputData = document.getElementById("input-data");
   var cntItems = elmDivInputData.querySelectorAll("#input-data > div.input-item").length;
 
@@ -141,7 +143,7 @@ document.getElementById("add-var").addEventListener("click",function(evt){
   elmDivInputData.appendChild(elmDiv);
 });
 
-document.getElementById("add-csv-file").addEventListener("click",function(evt){
+document.getElementById("add-input-csv-file").addEventListener("click",function(evt){
   var elmDivInputData = document.getElementById("input-data");
   var cntItems = elmDivInputData.querySelectorAll("#input-data > div.input-item").length;
 
