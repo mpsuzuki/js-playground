@@ -72,16 +72,20 @@ document.getElementById("exec").addEventListener("click", function(){
     var jsText = document.getElementById("code-text").value;
 
     var dataItems = document.querySelectorAll("div.output-data > div.data-item");
-    jsText += ";var spans = document.querySelectorAll('div.output-data > div.data-item > span');";
+    jsText += "\n/* postfix */\n"
+    jsText += "{\n let spans = document.querySelectorAll('div.output-data > div.data-item > span');";
     for (var i = 0; i < dataItems.length; i += 1) {
       var input = dataItems[i].getElementsByTagName("input")[0];
       var span = dataItems[i].getElementsByTagName("span")[0];
       if (checkVariableNameSyntax(input.value)) {
-        jsText += "spans[" + i.toString() + "].textContent = " + input.value + ".toString();";
+        jsText += "spans[" + i.toString() + "].textContent = " + input.value + ".toString();\n";
       };
     };
+    jsText += "\n};\n";
 
-    var jsTextNode = document.createTextNode( jsDataInits.join(";\n") + jsText );
+    var jsTextNode = document.createTextNode(
+       "debugger;\n/* prefix */\n"
+       + jsDataInits.join(";\n") + "\n" + jsText );
     elmSCRIPT.appendChild( jsTextNode );
     document.body.appendChild(elmSCRIPT);
   };
