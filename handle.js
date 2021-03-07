@@ -1,4 +1,18 @@
 document.getElementById("exec").addEventListener("click", function(){
+  var dataItems = document.querySelectorAll("div.input-data > div.data-item");
+  var jsDataInit = "";
+  for (var i = 0; i < dataItems.length; i += 1) {
+    var inputs = dataItems[i].getElementsByTagName("input");
+    if (dataItems[i].classList.contains("var-name-value-set")) {
+      jsDataInit += "var " + inputs[0].value;
+      jsDataInit += " = ";
+      jsDataInit += "\'" + inputs[1].value + "\';";
+    } else
+    if (inputs.classList.contains("var-name-file")) {
+      jsDataInit += ("var " + inputs[0].value + " = null;");
+    };
+  };
+
   var past = document.getElementById("on-the-fly");
   if (past) {
     past.parentElement.removeChild(past);
@@ -7,7 +21,7 @@ document.getElementById("exec").addEventListener("click", function(){
   elmSCRIPT.setAttribute("type", "text/javascript");
   elmSCRIPT.setAttribute("id", "on-the-fly");
   var jsText = document.getElementById("code-text").value;
-  var jsTextNode = document.createTextNode( jsText );
+  var jsTextNode = document.createTextNode( jsDataInit + jsText );
   elmSCRIPT.appendChild( jsTextNode );
   document.body.appendChild(elmSCRIPT);
 });
