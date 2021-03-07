@@ -8,6 +8,11 @@ document.getElementById("exec").addEventListener("click", function(){
   var jsDataPromises = [];
   var jsDataInits = [];
 
+  var checkVariableNameSyntax = function(s) {
+    return /^[A-Za-z_][0-9A-Za-z_]*/.test(s);
+  };
+
+
   /* to preserve the sequence of the file loading, the index i should be cared */
   var enqueFileReader = function(varName, csvFile, jsDataInits, i) {
     var promise = new Promise(function(fnResolve, fnReject) {
@@ -40,6 +45,14 @@ document.getElementById("exec").addEventListener("click", function(){
 
   for (var i = 0; i < dataItems.length; i += 1) {
     var inputs = dataItems[i].getElementsByTagName("input");
+
+    if (!checkVariableNameSyntax(inputs[0].value)) {
+      inputs[0].style.backgroundColor = "pink";
+      return;
+    } else {
+      inputs[0].style.backgroundColor = null;
+    };
+
     /* simple variable-value pair */
     if (dataItems[i].classList.contains("var-name-value-set")) {
       jsDataInits[i]  = "var " + inputs[0].value;
