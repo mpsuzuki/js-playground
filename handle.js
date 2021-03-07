@@ -1,29 +1,73 @@
 document.getElementById("exec").addEventListener("click", function(){
-  var dataItems = document.querySelectorAll("div.input-data > div.data-item");
-  var jsDataInit = "";
-  for (var i = 0; i < dataItems.length; i += 1) {
-    var inputs = dataItems[i].getElementsByTagName("input");
-    if (dataItems[i].classList.contains("var-name-value-set")) {
-      jsDataInit += "var " + inputs[0].value;
-      jsDataInit += " = ";
-      jsDataInit += "\'" + inputs[1].value + "\';";
-    } else
-    if (inputs.classList.contains("var-name-file")) {
-      jsDataInit += ("var " + inputs[0].value + " = null;");
-    };
-  };
-
   var past = document.getElementById("on-the-fly");
   if (past) {
     past.parentElement.removeChild(past);
   };
-  var elmSCRIPT = document.createElement("script");
-  elmSCRIPT.setAttribute("type", "text/javascript");
-  elmSCRIPT.setAttribute("id", "on-the-fly");
-  var jsText = document.getElementById("code-text").value;
-  var jsTextNode = document.createTextNode( jsDataInit + jsText );
-  elmSCRIPT.appendChild( jsTextNode );
-  document.body.appendChild(elmSCRIPT);
+
+  var dataItems = document.querySelectorAll("div.input-data > div.data-item");
+  var jsDataPromises = [];
+  var jsDataInits = [];
+
+  /* to preserve the sequence of the file loading, the index i should be cared */
+  var enqueFileReader = function(varName, csvFile, jsDataInits, i) {
+    var promise = new Promise(function(fnResolve, fnReject) {
+      var fr = new FileReader();
+      fr.onload = function(evt) {
+        var csvData = []; /* temporal array variable to load CSV file */
+        evt.target
+           .result
+           .split("\n")
+           .forEach(function(l){
+             csvData.push( l.split(/\s*,\s*/).map(function(t){return t.replace(/[\r\n]/, "");}) );
+           });
+        /* remove trailing line with no data */
+        if (csvData[csvData.length - 1].every(function(t){ return (t == null || t == undefined || t.length == 0);})) {
+          csvData.pop();
+        };
+
+        /* construct JavaScript string to set an array by JSON.stringify() */
+        jsDataInits[i]  = "var " + varName;
+        var jsstr = JSON.stringify(csvData);
+        jsDataInits[i] += " = JSON.parse('" + jsstr + "');";
+
+        fnResolve(csvFile.name);
+      };
+      fr.onerror = fnReject;
+      fr.readAsText(csvFile, "utf-8");
+    });
+    return promise;
+  };
+
+  for (var i = 0; i < dataItems.length; i += 1) {
+    var inputs = dataItems[i].getElementsByTagName("input");
+    /* simple variable-value pair */
+    if (dataItems[i].classList.contains("var-name-value-set")) {
+      jsDataInits[i]  = "var " + inputs[0].value;
+      jsDataInits[i] += " = ";
+      jsDataInits[i] += "\'" + inputs[1].value + "\';";
+    } else
+    /* CSV file loader */
+    if (dataItems[i].classList.contains("var-name-file")) {
+      var varName = inputs[0].value;
+      var csvFile = inputs[1].files[0];
+      var promise = enqueFileReader (varName, csvFile, jsDataInits, i);
+      jsDataPromises.push(promise);
+    };
+  };
+
+  var execJS = function() {
+    var elmSCRIPT = document.createElement("script");
+    elmSCRIPT.setAttribute("type", "text/javascript");
+    elmSCRIPT.setAttribute("id", "on-the-fly");
+    var jsText = document.getElementById("code-text").value;
+    var jsTextNode = document.createTextNode( jsDataInits.join(";\n") + jsText );
+    elmSCRIPT.appendChild( jsTextNode );
+    document.body.appendChild(elmSCRIPT);
+  };
+  Promise.all(jsDataPromises)
+         .then(execJS, function(){
+            console.log("some csv file could not be loaded\n");
+          });
 });
 
 document.getElementById("download").addEventListener("click", function(){
