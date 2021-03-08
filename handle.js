@@ -72,7 +72,7 @@ document.getElementById("exec").addEventListener("click", function(){
     var jsText = document.getElementById("code-text").value;
 
     var dataItems = document.querySelectorAll("div.output-data > div.data-item");
-    jsText += "\n/* postfix */\n"
+    jsText += "\n\n/* postfix */\n"
     jsText += "{\n let spans = document.querySelectorAll('div.output-data > div.data-item > span');";
     for (var i = 0; i < dataItems.length; i += 1) {
       var input = dataItems[i].getElementsByTagName("input")[0];
@@ -85,7 +85,7 @@ document.getElementById("exec").addEventListener("click", function(){
 
     var jsTextNode = document.createTextNode(
        "debugger;\n/* prefix */\n"
-       + jsDataInits.join(";\n") + "\n" + jsText );
+       + jsDataInits.join(";\n") + "\n\n/* JavaScript code in textarea */\n" + jsText );
     elmSCRIPT.appendChild( jsTextNode );
     document.body.appendChild(elmSCRIPT);
   };
