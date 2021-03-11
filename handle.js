@@ -219,7 +219,6 @@ document.querySelectorAll("input.add-var-set").forEach(function(elm){
     var elmInputVarName = document.createElement("input");
     elmInputVarName.setAttribute("type", "text");
     elmInputVarName.setAttribute("placeholder", "v" + cntItems.toString());
-    elmInputVarName.style.textAlign = "right";
     elmInputVarName.style.width = "60pt";
     elmDiv.appendChild(elmInputVarName);
 
@@ -246,7 +245,6 @@ document.querySelectorAll("input.add-var-get").forEach(function(elm){
     var elmInputVarName = document.createElement("input");
     elmInputVarName.setAttribute("type", "text");
     elmInputVarName.setAttribute("placeholder", "v" + cntItems.toString());
-    elmInputVarName.style.textAlign = "right";
     elmInputVarName.style.width = "60pt";
     elmDiv.appendChild(elmInputVarName);
 
@@ -275,7 +273,6 @@ document.querySelectorAll("input.add-csv-file").forEach(function(elm){
     var elmInputVarName = document.createElement("input");
     elmInputVarName.setAttribute("type", "text");
     elmInputVarName.setAttribute("placeholder", "v" + cntItems.toString());
-    elmInputVarName.style.textAlign = "right";
     elmInputVarName.style.width = "60pt";
     elmDiv.appendChild(elmInputVarName);
 
