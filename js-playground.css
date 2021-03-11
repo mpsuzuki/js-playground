@@ -8,8 +8,14 @@
   src: url("RictyDiminished-Regular.woff");
 }
 textarea {
+  font-size: 16pt;
   font-family: "Ricty Diminished", "RD-WOFF";
 }
 textarea.visible-space {
+  font-size: 16pt;
   font-family: "DotLine", "Ricty Diminished", "RD-WOFF";
+}
+input[type="text"] {
+  font-size: 16pt;
+  font-family: "Ricty Diminished", "RD-WOFF";
 }
