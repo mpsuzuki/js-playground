@@ -83,30 +83,39 @@ document.getElementById("exec").addEventListener("click", function(){
   };
 
   var execJS = function() {
-    var elmSCRIPT = document.createElement("script");
-    elmSCRIPT.setAttribute("type", "text/javascript");
-    elmSCRIPT.setAttribute("id", "on-the-fly");
-    var jsText = document.getElementById("code-text").value;
+    var jsTextBody = document.getElementById("code-text").value;
 
     var dataItems = document.querySelectorAll("div.output-data > div.data-item");
-    jsText += "\n\n/* postfix to inspect variables */\n"
-    jsText += "{\n";
-    jsText += '  let v2s = function(v){if(typeof(v)==="undefined"){return "undefined variable"}else{return v}};\n';
-    jsText += "  let spans = document.querySelectorAll('div.output-data > div.data-item > span');";
+    var jsTextPost = "\n\n/* postfix to inspect variables */\n"
+    jsTextPost += "{\n";
+    jsTextPost += '  let v2s = function(v){if(typeof(v)==="undefined"){return "undefined variable"}else{return v}};\n';
+    jsTextPost += "  let spans = document.querySelectorAll('div.output-data > div.data-item > span');";
     for (var i = 0; i < dataItems.length; i += 1) {
       var input = dataItems[i].getElementsByTagName("input")[0];
       var span = dataItems[i].getElementsByTagName("span")[0];
       if (checkVariableNameSyntax(input.value)) {
-        jsText += 'spans[' + i.toString() + '].textContent = typeof(' + input.value + ') === "undefined" ? "*** undefined variable ***" : ' + input.value + '.toString();\n';
+        jsTextPost += 'spans[';
+        jsTextPost += i.toString();
+        jsTextPost += '].textContent = typeof(';
+        jsTextPost += input.value;
+        jsTextPost += ') === "undefined" ? "*** undefined variable ***" : ';
+        jsTextPost += input.value;
+        jsTextPost += '.toString();\n';
       };
     };
-    jsText += "\n}; /* end of postfix */\n";
+    jsTextPost += "\n}; /* end of postfix */\n";
 
-    var jsTextNode = document.createTextNode(
-       "if (document.getElementById('break-before-exec').checked) { debugger };\n{ let fn = function() {\n/* prefix */\n"
-       + jsDataInits.join(";\n") + "\n\n/* JavaScript code in textarea */{\n" + jsText + "};/* end of JS in textarea */\n};\nfn();}\n");
-    elmSCRIPT.appendChild( jsTextNode );
-    document.body.appendChild(elmSCRIPT);
+    var jsTextPre = "if (document.getElementById('break-before-exec').checked) { debugger };\n";
+    jsTextPre += jsDataInits.join(";\n"); 
+    jsTextPre += "/* JavaScript code in textarea */ {\n";
+    jsTextPre += "};\n";
+
+    try {
+      var fnTry = new Function(jsTextPre + jsTextBody + jsTextPost);
+      fnTry();
+    } catch (err) {
+      window.alert(err.message);
+    };
   };
 
   Promise.all(jsDataPromises)
