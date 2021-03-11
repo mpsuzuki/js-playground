@@ -1,3 +1,31 @@
+let isInt = function(s) {
+  return /^[\-\+]?\d+$/.test(s);
+};
+
+let isFrac = function(s) {
+  return /^[\-\+]?(\d+|\d+\.\d+|\.\d+)$/.test(s);
+};
+
+let isFloat = function(s) {
+  let frac = s.replace(/^\s*/, "").replace(/\s*$/, "").toUpperCase();
+  let exp = "1";
+  if (frac.includes("E")) {
+    let toks = frac.split("E");
+    if (toks.length != 2) {
+      return false;
+    };
+    frac = toks[0];
+    exp = toks[1];
+  };
+  if (!isInt(exp)) {
+    return false;
+  };
+  if (!isFrac(frac)) {
+    return false;
+  };
+  return true;
+};
+
 document.getElementById("exec").addEventListener("click", function(){
   var past = document.getElementById("on-the-fly");
   if (past) {
@@ -26,10 +54,13 @@ document.getElementById("exec").addEventListener("click", function(){
                l.split(/\s*,\s*/)
                 .map(
                   function(t){
-                    if (/^[\-\+]?[0-9]+$/.test(t)) {
+                    if (isInt(t)) {
                       return parseInt(t);
-                    } else {
+                    } else
+                    if (isFloat(t)) {
                       return parseFloat(t);
+                    } else {
+                      return t;
                     };
                   }
                 )
