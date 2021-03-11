@@ -11,19 +11,14 @@ let isFloat = function(s) {
   let exp = "1";
   if (frac.includes("E")) {
     let toks = frac.split("E");
-    if (toks.length != 2) {
-      return false;
-    };
+    if (toks.length != 2) { return false; };
     frac = toks[0];
     exp = toks[1];
   };
-  if (!isInt(exp)) {
-    return false;
+  if (isInt(exp) && isFrac(frac)) {
+    return true;
   };
-  if (!isFrac(frac)) {
-    return false;
-  };
-  return true;
+  return false;
 };
 
 document.getElementById("exec").addEventListener("click", function(){
