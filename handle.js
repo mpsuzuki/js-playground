@@ -22,15 +22,32 @@ document.getElementById("exec").addEventListener("click", function(){
            .result
            .split("\n")
            .forEach(function(l){
-             csvData.push( l.split(/\s*,\s*/).map(function(t){return t.replace(/[\r\n]/, "");}) );
+             csvData.push(
+               l.split(/\s*,\s*/)
+                .map(
+                  function(t){
+                    if (/^[\-\+]?[0-9]+$/.test(t)) {
+                      return parseInt(t);
+                    } else {
+                      return parseFloat(t);
+                    };
+                  }
+                )
+             );
            });
         /* remove trailing line with no data */
-        if (csvData[csvData.length - 1].every(function(t){ return (t == null || t == undefined || t.length == 0);})) {
+        if (csvData[csvData.length - 1]
+          .every(
+            function(t){
+              return (isNaN(t) || t == null || t == undefined || t.length == 0);
+            }
+          )
+        ) {
           csvData.pop();
         };
 
         /* construct JavaScript string to set an array by JSON.stringify() */
-        jsDataInits[i]  = "var " + varName + " = " + JSON.stringify(csvData) + ";";
+        jsDataInits[i]  = "let " + varName + " = " + JSON.stringify(csvData) + ";";
 
         fnResolve(csvFile.name);
       };
@@ -52,7 +69,7 @@ document.getElementById("exec").addEventListener("click", function(){
 
     /* simple variable-value pair */
     if (dataItems[i].classList.contains("var-name-value-set")) {
-      jsDataInits[i]  = "var " + inputs[0].value;
+      jsDataInits[i]  = "let " + inputs[0].value;
       jsDataInits[i] += " = ";
       jsDataInits[i] += "\'" + inputs[1].value + "\';";
     } else
@@ -72,7 +89,7 @@ document.getElementById("exec").addEventListener("click", function(){
     var jsText = document.getElementById("code-text").value;
 
     var dataItems = document.querySelectorAll("div.output-data > div.data-item");
-    jsText += "\n\n/* postfix */\n"
+    jsText += "\n\n/* postfix to inspect variables */\n"
     jsText += "{\n let spans = document.querySelectorAll('div.output-data > div.data-item > span');";
     for (var i = 0; i < dataItems.length; i += 1) {
       var input = dataItems[i].getElementsByTagName("input")[0];
@@ -81,11 +98,11 @@ document.getElementById("exec").addEventListener("click", function(){
         jsText += "spans[" + i.toString() + "].textContent = " + input.value + ".toString();\n";
       };
     };
-    jsText += "\n};\n";
+    jsText += "\n}; /* end of postfix */\n";
 
     var jsTextNode = document.createTextNode(
-       "debugger;\n{ let fn = function() {\n/* prefix */\n"
-       + jsDataInits.join(";\n") + "\n\n/* JavaScript code in textarea */\n" + jsText + "};\nfn();}\n");
+       "if (document.getElementById('break-before-exec').checked) { debugger };\n{ let fn = function() {\n/* prefix */\n"
+       + jsDataInits.join(";\n") + "\n\n/* JavaScript code in textarea */{\n" + jsText + "};/* end of JS in textarea */\n};\nfn();}\n");
     elmSCRIPT.appendChild( jsTextNode );
     document.body.appendChild(elmSCRIPT);
   };
