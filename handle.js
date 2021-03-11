@@ -90,12 +90,14 @@ document.getElementById("exec").addEventListener("click", function(){
 
     var dataItems = document.querySelectorAll("div.output-data > div.data-item");
     jsText += "\n\n/* postfix to inspect variables */\n"
-    jsText += "{\n let spans = document.querySelectorAll('div.output-data > div.data-item > span');";
+    jsText += "{\n";
+    jsText += '  let v2s = function(v){if(typeof(v)==="undefined"){return "undefined variable"}else{return v}};\n';
+    jsText += "  let spans = document.querySelectorAll('div.output-data > div.data-item > span');";
     for (var i = 0; i < dataItems.length; i += 1) {
       var input = dataItems[i].getElementsByTagName("input")[0];
       var span = dataItems[i].getElementsByTagName("span")[0];
       if (checkVariableNameSyntax(input.value)) {
-        jsText += "spans[" + i.toString() + "].textContent = " + input.value + ".toString();\n";
+        jsText += 'spans[' + i.toString() + '].textContent = typeof(' + input.value + ') === "undefined" ? "*** undefined variable ***" : ' + input.value + '.toString();\n';
       };
     };
     jsText += "\n}; /* end of postfix */\n";
