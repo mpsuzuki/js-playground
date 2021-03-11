@@ -9,12 +9,17 @@
         <input type="button" class="add-csv-file" value="add csv-file">
         <input type="button" class="del-last" value="del last">
       </div>
-      <textarea id="code-text" style="width:400pt; height:150pt;" placeholder='console.log("hello world");'></textarea>
+      <textarea id="code-text" style="width:400pt; height:150pt;">let v0 = 0;
+console.log("now v0=" + v0);
+</textarea>
     </div>
     <div>
       <div class="output-data">
         <input type="button" class="add-var-get" value="add var">
         <input type="button" class="del-last" value="del last">
+        <div class="data-item var-name-value-get">
+          <input type="text" style="width: 60pt;" value="v0"/>=<span style="width:120pt;"></span>
+        </div>
       </div>
       <input id="exec" type="button" value="exec">
       <input id="take-snapshot" type="button" value="take snapshot">
