@@ -218,16 +218,16 @@ document.querySelectorAll("input.add-var-set").forEach(function(elm){
 
     var elmInputVarName = document.createElement("input");
     elmInputVarName.setAttribute("type", "text");
-    elmInputVarName.setAttribute("placeholder", "v" + cntItems.toString());
     elmInputVarName.style.width = "60pt";
+    elmInputVarName.value = ("v" + cntItems.toString());
     elmDiv.appendChild(elmInputVarName);
 
     elmDiv.appendChild(document.createTextNode("="));
 
     var elmInputVarValue = document.createElement("input");
     elmInputVarValue.setAttribute("type", "text");
-    elmInputVarValue.setAttribute("placeholder", "3.14");
     elmInputVarValue.style.width = "120pt";
+    elmInputVarValue.value = "3.14";
     elmDiv.appendChild(elmInputVarValue);
 
     elmDivParent.appendChild(elmDiv);
@@ -244,16 +244,16 @@ document.querySelectorAll("input.add-var-get").forEach(function(elm){
     elmDiv.classList.add("var-name-value-get");
     var elmInputVarName = document.createElement("input");
     elmInputVarName.setAttribute("type", "text");
-    elmInputVarName.setAttribute("placeholder", "v" + cntItems.toString());
     elmInputVarName.style.width = "60pt";
+    elmInputVarName.value = ("v" + cntItems.toString());
     elmDiv.appendChild(elmInputVarName);
 
     elmDiv.appendChild(document.createTextNode("="));
 
     var elmSpanVarValue = document.createElement("span");
     elmSpanVarValue.setAttribute("type", "text");
-    elmSpanVarValue.setAttribute("placeholder", "3.14");
     elmSpanVarValue.style.width = "120pt";
+    elmSpanVarValue.value = "3.14";
     elmDiv.appendChild(elmSpanVarValue);
 
     elmDivParent.appendChild(elmDiv);
@@ -272,8 +272,8 @@ document.querySelectorAll("input.add-csv-file").forEach(function(elm){
 
     var elmInputVarName = document.createElement("input");
     elmInputVarName.setAttribute("type", "text");
-    elmInputVarName.setAttribute("placeholder", "v" + cntItems.toString());
     elmInputVarName.style.width = "60pt";
+    elmInputVarName.value = ("d" + cntItems.toString());
     elmDiv.appendChild(elmInputVarName);
 
     elmDiv.appendChild(document.createTextNode("="));
