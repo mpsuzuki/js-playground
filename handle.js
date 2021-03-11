@@ -84,8 +84,8 @@ document.getElementById("exec").addEventListener("click", function(){
     jsText += "\n};\n";
 
     var jsTextNode = document.createTextNode(
-       "debugger;\n/* prefix */\n"
-       + jsDataInits.join(";\n") + "\n\n/* JavaScript code in textarea */\n" + jsText );
+       "debugger;\n{ let fn = function() {\n/* prefix */\n"
+       + jsDataInits.join(";\n") + "\n\n/* JavaScript code in textarea */\n" + jsText + "};\nfn();}\n");
     elmSCRIPT.appendChild( jsTextNode );
     document.body.appendChild(elmSCRIPT);
   };
