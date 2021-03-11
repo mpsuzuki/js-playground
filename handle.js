@@ -124,9 +124,9 @@ document.getElementById("exec").addEventListener("click", function(){
         jsTextPost += i.toString();
         jsTextPost += '].textContent = typeof(';
         jsTextPost += input.value;
-        jsTextPost += ') === "undefined" ? "*** undefined variable ***" : ';
+        jsTextPost += ') === "undefined" ? "*** undefined variable ***" : JSON.stringify(';
         jsTextPost += input.value;
-        jsTextPost += '.toString();\n';
+        jsTextPost += ');\n';
       };
     };
     jsTextPost += "\n}; /* end of postfix */\n";
