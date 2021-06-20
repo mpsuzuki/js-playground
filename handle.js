@@ -338,3 +338,37 @@ document.querySelectorAll("input.add-csv-file").forEach(function(elm){
     elmDivParent.appendChild(elmDiv);
   });
 });
+
+let l10nButtons = function() {
+  cssSelector2val = {};
+  switch(window.navigator.language) {
+  case "ja":
+  case "ja-JP":
+  default:
+    cssSelector2val = {
+      "div.input-data > input.add-csv-file": "csvを1つ予定追加",
+      "div.input-data > input.del-last": "csvを1つ予定削除",
+      "div.output-data > input.add-var-get": "変数検査を1つ追加",
+      "div.output-data > input.del-last": "変数検査を1つ削除",
+      "#exec": "実行",
+      "#break_if_in_debugger": "デバッガなら実行直後に停止",
+      "#take-snapshot": "Cookieに履歴を追加",
+      "#clear-snapshots": "履歴を全て破棄",
+      "#revert-snapshot": "最新の履歴を1つ破棄",
+      "#download": "現状をダウンロード",
+      "#download-anchor > span": "現状をダウンロード",
+      "#mark-space": "空白を強調"
+    };
+  };
+  Object.keys(cssSelector2val).forEach(function(cs){
+    let msg = cssSelector2val[cs];
+    let elm = document.querySelector(cs);
+    if (elm) {
+      switch (elm.tagName) {
+      case "INPUT": elm.setAttribute("value", msg);
+      case "SPAN": elm.textContent = msg;
+      };
+    };
+  });
+};
+l10nButtons();
