@@ -356,8 +356,9 @@ let l10nButtons = function() {
       "#clear-snapshots": "履歴を全て破棄",
       "#revert-snapshot": "最新の履歴を1つ破棄",
       "#download": "現状をダウンロード",
-      "#download-anchor > span": "現状をダウンロード",
-      "#mark-space ~ span": { "data-on": "空白を強調中", "data-off": "空白強調していません" }
+      "#download-anchor > span": "書いたプログラムをダウンロード",
+      "#note-mark-space": "空白文字の強調",
+      "#mark-space ~ span": { "data-on": "強調中", "data-off": "強調していません" }
     };
   };
   Object.keys(cssSelector2val).forEach(function(cs){

@@ -52,10 +52,12 @@ a.css-btn:active {
   display: inline-block;
 }
 #mark-space ~ span::after {
+  color: gray;
   display: inline-block;
   content: attr(data-off);
 }
 #mark-space:checked ~ span::after {
+  color: black;
   display: inline-block;
   content: attr(data-on);
 }
