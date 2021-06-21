@@ -168,8 +168,7 @@ document.getElementById("download-anchor").addEventListener("click", function(){
   var elmDownloadAnchor = document.getElementById("download-anchor");
   var dateTimeStr = getDateTimeStr();
   elmDownloadAnchor.setAttribute("href", dataURL);
-  // elmDownloadAnchor.setAttribute("download", "js-code-" + dateTimeStr + ".txt");
-  elmDownloadAnchor.setAttribute("download", "");
+  elmDownloadAnchor.setAttribute("download", "js-code-" + dateTimeStr + ".txt");
   elmDownloadAnchor.style.display = "inline-block";
 });
 

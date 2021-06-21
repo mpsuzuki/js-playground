@@ -44,7 +44,7 @@ a.css-btn {
   color: black;
   background-image: linear-gradient(to bottom, ghostwhite, lightgray);
 }
-a.css-btn-pushed:active {
+a.css-btn:active {
   border: 2px inset #b9b9b9;
   background-image: linear-gradient(to bottom, lightgray, ghostwhite);
 }
