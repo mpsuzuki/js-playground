@@ -43,20 +43,16 @@ a.css-btn {
   color: black;
   background-image: linear-gradient(to bottom, ghostwhite, lightgray);
 }
-a.css-btn:active {
+a.css-btn:active, a.css-btn.pushed {
   border: 2px inset #b9b9b9;
   background-image: linear-gradient(to bottom, lightgray, ghostwhite);
 }
 #mark-space {
   display: inline-block;
 }
-#mark-space ~ span::after {
-  color: gray;
-  display: inline-block;
+#mark-space > span::after {
   content: attr(data-off);
 }
-#mark-space:checked ~ span::after {
-  color: black;
-  display: inline-block;
+#mark-space > span.content-data-on::after {
   content: attr(data-on);
 }

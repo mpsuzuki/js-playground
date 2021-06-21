@@ -244,11 +244,8 @@ document.getElementById("code-text").addEventListener("keydown",function(evt){
 document.getElementById("mark-space").addEventListener("click",function(evt){
   var elmTextArea = document.getElementById("code-text");
   elmTextArea.classList.toggle("visible-space");
-  if (elmTextArea.classList.contains("visible-space")) {
-    evt.target.value = "stop emphasize";
-  } else {
-    evt.target.value = "emphasize space";
-  };
+  evt.currentTarget.classList.toggle("pushed");
+  evt.currentTarget.querySelector("span").classList.toggle("content-data-on");
 });
 
 document.querySelectorAll("*.del-last").forEach(function(elm){
@@ -357,8 +354,7 @@ let l10nButtons = function() {
       "#revert-snapshot": "スナップショットに戻る",
       "#download": "プログラムをダウンロード",
       "#download-anchor > span": "プログラムをダウンロード",
-      "#note-mark-space": "空白文字を目立たせる",
-      "#mark-space ~ span": { "data-on": "強調中", "data-off": "強調していません" }
+      "#note-mark-space": { "data-on": "空白文字の強調を解除する", "data-off": "空白文字を目立たせる" }
     };
   };
   Object.keys(cssSelector2val).forEach(function(cs){
