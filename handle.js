@@ -251,9 +251,9 @@ document.getElementById("mark-space").addEventListener("click",function(evt){
   };
 });
 
-document.querySelectorAll("input.del-last").forEach(function(elm){
+document.querySelectorAll("*.del-last").forEach(function(elm){
   elm.addEventListener("click",function(evt){
-    var items = evt.target.parentElement.querySelectorAll("div.data-item");
+    var items = evt.currentTarget.parentElement.querySelectorAll("div.data-item");
     if (items.length > 0) {
       var lastItem = items[items.length - 1];
       lastItem.parentElement.removeChild(lastItem);
@@ -261,7 +261,7 @@ document.querySelectorAll("input.del-last").forEach(function(elm){
   });
 });
 
-document.querySelectorAll("input.add-var-set").forEach(function(elm){
+document.querySelectorAll("*.add-var-set").forEach(function(elm){
   elm.addEventListener("click",function(evt){
     var elmDivParent = evt.target.parentElement;
     var cntItems = elmDivParent.querySelectorAll("div.data-item").length;
@@ -288,9 +288,9 @@ document.querySelectorAll("input.add-var-set").forEach(function(elm){
   });
 });
 
-document.querySelectorAll("input.add-var-get").forEach(function(elm){
+document.querySelectorAll("*.add-var-get").forEach(function(elm){
   elm.addEventListener("click",function(evt){
-    var elmDivParent = evt.target.parentElement;
+    var elmDivParent = evt.currentTarget.parentElement;
     var cntItems = elmDivParent.querySelectorAll("div.data-item").length;
 
     var elmDiv = document.createElement("div");
@@ -315,9 +315,9 @@ document.querySelectorAll("input.add-var-get").forEach(function(elm){
 });
 
 
-document.querySelectorAll("input.add-csv-file").forEach(function(elm){
+document.querySelectorAll("*.add-csv-file").forEach(function(elm){
   elm.addEventListener("click",function(evt){
-    var elmDivParent = evt.target.parentElement;
+    var elmDivParent = evt.currentTarget.parentElement;
     var cntItems = elmDivParent.querySelectorAll("div.data-item").length;
 
     var elmDiv = document.createElement("div");
@@ -346,11 +346,11 @@ let l10nButtons = function() {
   case "ja-JP":
   default:
     cssSelector2val = {
-      "div.input-data > input.add-csv-file": "csvを1つ予定追加",
-      "div.input-data > input.del-last": "csvを1つ予定削除",
-      "div.output-data > input.add-var-get": "変数検査を1つ追加",
-      "div.output-data > input.del-last": "変数検査を1つ削除",
-      "#exec": "実行",
+      "div.input-data > a.add-csv-file > span": "csvを1つ予定追加",
+      "div.input-data > a.del-last > span": "csvを1つ予定削除",
+      "div.output-data > a.add-var-get > span": "変数検査を1つ追加",
+      "div.output-data > a.del-last > span": "変数検査を1つ削除",
+      "#exec > span": "実行",
       "#break_if_in_debugger": "デバッガなら実行直後に停止",
       "#take-snapshot": "Cookieに履歴を追加",
       "#clear-snapshots": "履歴を全て破棄",
