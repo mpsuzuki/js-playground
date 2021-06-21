@@ -157,7 +157,7 @@ document.getElementById("download").addEventListener("click", function(){
   var elmDownloadAnchor = document.getElementById("download-anchor");
   elmDownloadAnchor.setAttribute("href", dataURL);
   elmDownloadAnchor.setAttribute("download", "code.js");
-  elmDownloadAnchor.style.display = "block";
+  elmDownloadAnchor.style.display = "inline-block";
 });
 
 document.getElementById("download-anchor").addEventListener("click", function(evt){
