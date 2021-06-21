@@ -19,6 +19,10 @@ input[type="text"] {
   font-size: 16pt;
   font-family: "Ricty Diminished", "RD-WOFF";
 }
+input {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
 a.css-btn {
   font-size: 85%;
   display: inline-block;
@@ -32,9 +36,15 @@ a.css-btn {
   text-align: center;
   vertical-align: middle;
   border-radius: 4px;
-  border: 3px outset #b9b9b9;
+  border: 2px outset #b9b9b9;
   padding-left: 3px;
   padding-right: 3px;
-  margin: 5px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  color: black;
   background-image: linear-gradient(to bottom, ghostwhite, lightgray);
+}
+a.css-btn-pushed:active {
+  border: 2px inset #b9b9b9;
+  background-image: linear-gradient(to bottom, lightgray, ghostwhite);
 }

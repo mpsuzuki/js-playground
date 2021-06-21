@@ -21,6 +21,17 @@ let isFloat = function(s) {
   return false;
 };
 
+let getDateTimeStr = function() {
+  var dt = new Date();
+  var k = ("0000" + dt.getFullYear().toString()).slice(-4) +
+          ("00" + (dt.getMonth() + 1).toString()).slice(-2) +
+          ("00" + dt.getDate().toString()).slice(-2) +
+          ("00" + dt.getHours().toString()).slice(-2) +
+          ("00" + dt.getMinutes().toString()).slice(-2) +
+          ("00" + dt.getSeconds().toString()).slice(-2);
+  return k;
+};
+
 document.getElementById("exec").addEventListener("click", function(){
   var past = document.getElementById("on-the-fly");
   if (past) {
@@ -150,30 +161,20 @@ document.getElementById("exec").addEventListener("click", function(){
           });
 });
 
-document.getElementById("download").addEventListener("click", function(){
+document.getElementById("download-anchor").addEventListener("click", function(){
   var jsText = document.getElementById("code-text").value;
-  var blob = new Blob([jsText], {type: "text/javascript"}); 
+  var blob = new Blob([jsText], {type: "text/plain"}); 
   var dataURL = URL.createObjectURL(blob);
   var elmDownloadAnchor = document.getElementById("download-anchor");
+  var dateTimeStr = getDateTimeStr();
   elmDownloadAnchor.setAttribute("href", dataURL);
-  elmDownloadAnchor.setAttribute("download", "code.js");
+  // elmDownloadAnchor.setAttribute("download", "js-code-" + dateTimeStr + ".txt");
+  elmDownloadAnchor.setAttribute("download", "");
   elmDownloadAnchor.style.display = "inline-block";
 });
 
-document.getElementById("download-anchor").addEventListener("click", function(evt){
-  document.getElementById("download-anchor").style.display = "none";
-  evt.preventDefault();
-});
-
 document.getElementById("take-snapshot").addEventListener("click", function(){
-  var dt = new Date();
-  var k = ("0000" + dt.getFullYear().toString()).slice(-4) +
-          ("00" + (dt.getMonth() + 1).toString()).slice(-2) +
-          ("00" + dt.getDate().toString()).slice(-2) +
-          ("00" + dt.getHours().toString()).slice(-2) +
-          ("00" + dt.getMinutes().toString()).slice(-2) +
-          ("00" + dt.getSeconds().toString()).slice(-2);
-
+  var k = getDateTimeStr();
   var jsText = document.getElementById("code-text").value;
   document.cookie = k + "=" + encodeURIComponent(jsText);
 
