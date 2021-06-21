@@ -19,3 +19,21 @@ input[type="text"] {
   font-size: 16pt;
   font-family: "Ricty Diminished", "RD-WOFF";
 }
+a.css-btn {
+  font-size: 85%;
+  display: inline-block;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select:none;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  text-align: center;
+  vertical-align: middle;
+  border-radius: 4px;
+  border: 3px outset #b9b9b9;
+  padding-left: 3px;
+  padding-right: 3px;
+  margin: 5px;
+}
