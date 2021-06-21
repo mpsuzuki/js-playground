@@ -346,18 +346,18 @@ let l10nButtons = function() {
   case "ja-JP":
   default:
     cssSelector2val = {
-      "div.input-data > a.add-csv-file > span": "csvを1つ予定追加",
-      "div.input-data > a.del-last > span": "csvを1つ予定削除",
-      "div.output-data > a.add-var-get > span": "変数検査を1つ追加",
-      "div.output-data > a.del-last > span": "変数検査を1つ削除",
+      "div.input-data > a.add-csv-file > span": "入力用のCSVファイルを追加",
+      "div.input-data > a.del-last > span": "最後のひとつを削除",
+      "div.output-data > a.add-var-get > span": "表示する変数を追加",
+      "div.output-data > a.del-last > span": "最後のひとつを削除",
       "#exec > span": "実行",
       "#break_if_in_debugger": "デバッガなら実行直後に停止",
-      "#take-snapshot": "Cookieに履歴を追加",
-      "#clear-snapshots": "履歴を全て破棄",
-      "#revert-snapshot": "最新の履歴を1つ破棄",
-      "#download": "現状をダウンロード",
-      "#download-anchor > span": "書いたプログラムをダウンロード",
-      "#note-mark-space": "空白文字の強調",
+      "#take-snapshot": "スナップショット保存",
+      "#clear-snapshots": "スナップショットを全て削除",
+      "#revert-snapshot": "スナップショットに戻る",
+      "#download": "プログラムをダウンロード",
+      "#download-anchor > span": "プログラムをダウンロード",
+      "#note-mark-space": "空白文字を目立たせる",
       "#mark-space ~ span": { "data-on": "強調中", "data-off": "強調していません" }
     };
   };
