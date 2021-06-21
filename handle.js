@@ -357,16 +357,25 @@ let l10nButtons = function() {
       "#revert-snapshot": "最新の履歴を1つ破棄",
       "#download": "現状をダウンロード",
       "#download-anchor > span": "現状をダウンロード",
-      "#mark-space": "空白を強調"
+      "#mark-space ~ span": { "data-on": "空白を強調中", "data-off": "空白強調していません" }
     };
   };
   Object.keys(cssSelector2val).forEach(function(cs){
     let msg = cssSelector2val[cs];
     let elm = document.querySelector(cs);
     if (elm) {
-      switch (elm.tagName) {
-      case "INPUT": elm.setAttribute("value", msg);
-      case "SPAN": elm.textContent = msg;
+      switch (typeof(msg)) {
+      case "string":
+        switch (elm.tagName) {
+        case "INPUT": elm.setAttribute("value", msg);
+        case "SPAN": elm.textContent = msg;
+        };
+        break;
+      case "object":
+        Object.keys(msg).forEach(function(k){
+          elm.setAttribute(k, msg[k]);
+        });
+        break;
       };
     };
   });

@@ -10,4 +10,4 @@ div.output-data > *.del-last { display: inline-block; }
 #revert-snapshot { display: none; }
 #download { display: block; }
 #download-anchor { display: inline-block; }
-#mark-space { display: block; }
+#mark-space { display: inline-block; }

@@ -48,3 +48,14 @@ a.css-btn:active {
   border: 2px inset #b9b9b9;
   background-image: linear-gradient(to bottom, lightgray, ghostwhite);
 }
+#mark-space {
+  display: inline-block;
+}
+#mark-space ~ span::after {
+  display: inline-block;
+  content: attr(data-off);
+}
+#mark-space:checked ~ span::after {
+  display: inline-block;
+  content: attr(data-on);
+}
