@@ -1,13 +1,13 @@
 div.input-data > input.add-csv-file { display: none; }
 div.input-data > input.del-last { display: none; }
-div.output-data > input.add-var-get { display: inline; }
-div.output-data > input.del-last { display: inline; }
-#exec { display: none; }
+div.output-data > input.add-var-get { display: inline-block; }
+div.output-data > input.del-last { display: inline-block; }
+#exec { display: inline-block; }
 #break_if_in_debugger { display: none; }
 #break-before-exec { display: none; }
 #take-snapshot { display: none; }
 #clear-snapshots { display: none; }
 #revert-snapshot { display: none; }
 #download { display: block; }
-#download-anchor { display: inline; background-color: yellow;}
+#download-anchor { display: inline-block; }
 #mark-space { display: block; }
