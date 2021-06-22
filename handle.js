@@ -163,7 +163,7 @@ document.getElementById("exec").addEventListener("click", function(){
 
 document.getElementById("download-anchor").addEventListener("click", function(){
   var jsText = document.getElementById("code-text").value;
-  var blob = new Blob([jsText], {type: "text/plain"}); 
+  var blob = new Blob([jsText], {type: "application/octet-stream"}); 
   var dataURL = URL.createObjectURL(blob);
   var elmDownloadAnchor = document.getElementById("download-anchor");
   var dateTimeStr = getDateTimeStr();
