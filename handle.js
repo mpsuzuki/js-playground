@@ -167,6 +167,7 @@ document.getElementById("download-anchor").addEventListener("click", function(){
   var dataURL = URL.createObjectURL(blob);
   var elmDownloadAnchor = document.getElementById("download-anchor");
   var dateTimeStr = getDateTimeStr();
+  elmDownloadAnchor.setAttribute("type", "application/octet-stream");
   elmDownloadAnchor.setAttribute("href", dataURL);
   elmDownloadAnchor.setAttribute("download", "js-code-" + dateTimeStr + ".txt");
   elmDownloadAnchor.style.display = "inline-block";
