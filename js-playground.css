@@ -15,6 +15,10 @@ textarea.visible-space {
   font-size: 16pt;
   font-family: "DotLine", "Ricty Diminished", "RD-WOFF";
 }
+*.visible-space {
+  font-size: 16pt;
+  font-family: "DotLine", "Ricty Diminished", "RD-WOFF";
+}
 input[type="text"] {
   font-size: 16pt;
   font-family: "Ricty Diminished", "RD-WOFF";
@@ -55,4 +59,10 @@ a.css-btn:active, a.css-btn.pushed {
 }
 #mark-space > span.content-data-on::after {
   content: attr(data-on);
+}
+#jslint-status {
+  display: none;
+}
+mark.red {
+  background-color: pink;
 }
