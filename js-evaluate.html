@@ -1,0 +1,72 @@
+<html>
+  <head>
+  </head>
+  <body>
+    <div>
+      <input type="file" id="fileSelector" multiple>
+      <input type="button" id="startEvaluate" value="evaluate">
+    </div>
+    <div>
+      <table>
+        <thead>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
+    <script>
+      let elmFileSelector = document.getElementById("fileSelector");
+      let progFragments = {};
+
+      let handleFileSelector = function() {
+
+        let srcFiles = elmFileSelector.files;
+
+        if (srcFiles.length > 0) {
+          elmFileSelector.disabled = true;
+
+          let promisesForFiles = [];
+
+          for (let i = 0; i < srcFiles.length; i ++) {
+            let f = srcFiles[i];
+            let key = f.name;
+            promisesForFiles.push( f.text().then((val) => {progFragments[ key ] = val}) );
+          };
+
+          Promise.all(promisesForFiles).then((val) => {elmFileSelector.disabled = false});
+        };
+      };
+
+      let evaluateSingleFragment = function(arrForPrompt, progFragment) {
+        let prefixText  = "let arrForPrompt = " + JSON.stringify(arrForPrompt) + ";\n";
+            prefixText += "let prompt = function(){ return arrForPrompt.shift(); };\n";
+            prefixText += "let arrForAlert = [];\n{\n";
+            prefixText += "}\nlet alert = function(v){ arrForAlert.push(v)};\n";
+
+        let postfixText  = "let result = {};\n";
+            postfixText += "result.prompt = arrForPrompt;\n";
+            postfixText += "result.alert = arrForAlert;\n";
+            // postfixText += "return JSON.stringify(result);\n";
+            postfixText += "postMessage( JSON.stringify(result) );\n";
+
+        let compositeText = prefixText + progFragment + postfixText;
+
+        let jsInput = {};
+            jsInput.arrForPrompt = arrForPrompt;
+            jsInput.progFragment = progFragment;
+        let result = {}; 
+        try {
+          let fnTry = new Function( compositeText ); // hard to detect syntax error in WebWorker, so check locally
+          result["result"] = fnTry();
+        } catch (err) {
+          result["error"] = err;
+        };
+        return result;
+      };
+
+      elmFileSelector.addEventListener("change", handleFileSelector);
+    </script>
+  </body>
+</html>
+
+
