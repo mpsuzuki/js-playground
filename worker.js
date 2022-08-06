@@ -1,10 +1,11 @@
 onmessage = function(evt) {
-  let result = {};
+  let result = null;
 
   try {
     let fnTry = new Function( evt.data );
-    result.result = fnTry();
+    result = fnTry();
   } catch (err) {
+    result = {};
     result.error = err.toString();
   };
   postMessage( JSON.stringify(result) );
