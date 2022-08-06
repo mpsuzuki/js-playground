@@ -91,7 +91,8 @@
             let elmTH = document.createElement("th");
             elmTR.appendChild(elmTH);
 
-            let txtNAME = document.createTextNode(q.name);
+            let name_filtered = q.name.replace(/_[0-9]{4}(-[0-9]{2}){5}\.js/, ""); // remove date-time.js suffix
+            let txtNAME = document.createTextNode(name_filtered);
             elmTH.appendChild(txtNAME);
 
             let elmTD = document.createElement("td");
