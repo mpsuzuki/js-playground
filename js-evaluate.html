@@ -5,15 +5,24 @@
         border-collapse: collapse;
         border: 1px solid black;
       }
+      div.setting > input {
+        margin: 4px;
+      }
+      #jsonForPrompt {
+        width: 400px;
+      }
     </style>
   </head>
   <body>
-    <div>
+    <div class="setting">
       <input type="file" id="fileSelector" multiple>
+      <br>
+      <input type="text" id="jsonForPrompt" placeholder='[["test1-prompt1", "test1-prompt2"], ["test2-prompt1", ...], ... ]'>
+      <br>
       <input type="button" id="startEvaluate" value="evaluate">
     </div>
-    <div>
-      <br>
+    <br>
+    <div class="evaluated">
       <table>
         <thead></thead>
         <tbody></tbody>
