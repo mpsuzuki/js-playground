@@ -1,5 +1,11 @@
 <html>
   <head>
+    <style>
+      table, tr, td, th {
+        border-collapse: collapse;
+        border: 1px solid black;
+      }
+    </style>
   </head>
   <body>
     <div>
@@ -7,15 +13,18 @@
       <input type="button" id="startEvaluate" value="evaluate">
     </div>
     <div>
+      <br>
       <table>
-        <tbody>
-        </tbody>
+        <thead></thead>
+        <tbody></tbody>
       </table>
     </div>
     <script>
       let elmFileSelector = document.getElementById("fileSelector");
       let elmStartEvaluate = document.getElementById("startEvaluate");
-      let elmTABLE = document.getElementsByTagName("tbody")[0];
+      let elmTABLE = document.getElementsByTagName("table")[0];
+      let elmTHEAD = document.getElementsByTagName("thead")[0];
+      let elmTBODY = document.getElementsByTagName("tbody")[0];
       let progFragments = {};
 
       let handleFileSelector = function() {
@@ -86,7 +95,7 @@
 
 
             let elmTR = document.createElement("tr");
-            elmTABLE.appendChild(elmTR);
+            elmTBODY.appendChild(elmTR);
 
             let elmTH = document.createElement("th");
             elmTR.appendChild(elmTH);
@@ -113,6 +122,13 @@
 
 
       let evaluateFragments = function() {
+        while (elmTHEAD.lastChild) { 
+          elmTHEAD.removeChild(elmTBODY.lastChild);
+        };
+        while (elmTBODY.lastChild) {
+          elmTBODY.removeChild(elmTBODY.lastChild);
+        };
+
         let arrToDo = [];
         for (const [k, v] of Object.entries( progFragments ) ) {
           let q = {};
