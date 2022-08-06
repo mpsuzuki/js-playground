@@ -38,31 +38,58 @@
       };
 
       let evaluateSingleFragment = function(arrForPrompt, progFragment) {
-        let prefixText  = "let arrForPrompt = " + JSON.stringify(arrForPrompt) + ";\n";
+        let prefixText  = "";
+            prefixText += "let arrForPrompt = " + JSON.stringify(arrForPrompt) + ";\n";
             prefixText += "let prompt = function(){ return arrForPrompt.shift(); };\n";
-            prefixText += "let arrForAlert = [];\n{\n";
-            prefixText += "}\nlet alert = function(v){ arrForAlert.push(v)};\n";
+            prefixText += "let arrForAlert = [];\n";
+            prefixText += "let alert = function(v){ arrForAlert.push(v)};\n";
 
-        let postfixText  = "let result = {};\n";
+        let postfixText  = "";
+            postfixText += "let result = {};\n";
             postfixText += "result.prompt = arrForPrompt;\n";
             postfixText += "result.alert = arrForAlert;\n";
-            // postfixText += "return JSON.stringify(result);\n";
-            postfixText += "postMessage( JSON.stringify(result) );\n";
+            postfixText += "return JSON.stringify(result);\n";
 
         let compositeText = prefixText + progFragment + postfixText;
 
-        let jsInput = {};
-            jsInput.arrForPrompt = arrForPrompt;
-            jsInput.progFragment = progFragment;
-        let result = {}; 
+        let result = null;
+        let pr = new Promise((resolve, reject) => {
+          let wk = new Worker("worker.js");
+          let stp = function() {
+            wk.terminate();
+            reject("timeout");
+          };
+          let brk = setTimeout(stp, 1000);
+          wk.onmessage = function(evt) {
+            clearTimeout(brk);
+            result = JSON.parse(evt.data);
+            wk.terminate();
+            resolve(result);
+          };
+          wk.postMessage(compositeText);
+        });
+        return pr;
+      };
+
+      async function asyncEvaluateSingleFragment(arrForPrompt, progFragment) {
+        let result = await evaluateSingleFragment(arrForPrompt, progFragment);
+        console.log(result);
+      };
+
+/* ---------------------
         try {
-          let fnTry = new Function( compositeText ); // hard to detect syntax error in WebWorker, so check locally
+          // worker.onmessage = function(evt) {
+          //   result.prompt = evt.data.result.prompt;
+          //   result.alert = evt.data.result.alert;
+          // };
+          // worker.postMessage(compositeText);
+          let fnTry = Function( compositeText );
           result["result"] = fnTry();
         } catch (err) {
           result["error"] = err;
         };
         return result;
-      };
+------------------------ */
 
       elmFileSelector.addEventListener("change", handleFileSelector);
     </script>
