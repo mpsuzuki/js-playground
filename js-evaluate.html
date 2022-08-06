@@ -8,14 +8,14 @@
     </div>
     <div>
       <table>
-        <thead>
-        </thead>
         <tbody>
         </tbody>
       </table>
     </div>
     <script>
       let elmFileSelector = document.getElementById("fileSelector");
+      let elmStartEvaluate = document.getElementById("startEvaluate");
+      let elmTABLE = document.getElementsByTagName("tbody")[0];
       let progFragments = {};
 
       let handleFileSelector = function() {
@@ -50,7 +50,7 @@
             postfixText += "let result = {};\n";
             postfixText += "result.prompt = arrForPrompt;\n";
             postfixText += "result.alert = arrForAlert;\n";
-            postfixText += "return JSON.stringify(result);\n";
+            postfixText += "return result;\n";
 
         let compositeText = prefixText + progFragment + postfixText;
 
@@ -62,7 +62,9 @@
           let stp = function() {
             wk.terminate();
             wk = null;
-            resolve("timeout"); // deal the error as normal timeout event
+            result = {};
+            result.error = "timeout";
+            resolve(result);
           };
           let brk = setTimeout(stp, 100);
           wk.onmessage = function(evt) {
@@ -75,27 +77,54 @@
         return pr;
       };
 
-      async function asyncEvaluateSingleFragment(arrForPrompt, progFragment) {
-        let result = await evaluateSingleFragment(arrForPrompt, progFragment);
-        console.log(result);
+    
+      let enqueEvaluation = function(arrForPrompt, arrToDo) {
+        if (arrToDo.length > 0) {
+          let q = arrToDo.shift();
+          evaluateSingleFragment(arrForPrompt, q.fragment)
+          .then((result) => {
+
+
+            let elmTR = document.createElement("tr");
+            elmTABLE.appendChild(elmTR);
+
+            let elmTH = document.createElement("th");
+            elmTR.appendChild(elmTH);
+
+            let txtNAME = document.createTextNode(q.name);
+            elmTH.appendChild(txtNAME);
+
+            let elmTD = document.createElement("td");
+            elmTR.appendChild(elmTD);
+            let txtRESULT = null;
+            if (result.alert && result.alert.length > 0) {
+              txtRESULT = document.createTextNode(result.alert[0]);
+            } else {
+              txtRESULT = document.createTextNode(result.error);
+            };
+            elmTD.appendChild(txtRESULT);
+
+
+            enqueEvaluation(arrForPrompt, arrToDo);
+          });
+        };
       };
 
-/* ---------------------
-        try {
-          // worker.onmessage = function(evt) {
-          //   result.prompt = evt.data.result.prompt;
-          //   result.alert = evt.data.result.alert;
-          // };
-          // worker.postMessage(compositeText);
-          let fnTry = Function( compositeText );
-          result["result"] = fnTry();
-        } catch (err) {
-          result["error"] = err;
+
+      let evaluateFragments = function() {
+        let arrToDo = [];
+        for (const [k, v] of Object.entries( progFragments ) ) {
+          let q = {};
+          q.name = k;
+          q.fragment = v;
+          arrToDo.push(q);
         };
-        return result;
------------------------- */
+
+        enqueEvaluation([1901], arrToDo);
+      };
 
       elmFileSelector.addEventListener("change", handleFileSelector);
+      elmStartEvaluate.addEventListener("click", evaluateFragments);
     </script>
   </body>
 </html>
