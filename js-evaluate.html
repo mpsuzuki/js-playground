@@ -37,6 +37,8 @@
         };
       };
 
+      let wk = new Worker("worker.js");
+
       let evaluateSingleFragment = function(arrForPrompt, progFragment) {
         let prefixText  = "";
             prefixText += "let arrForPrompt = " + JSON.stringify(arrForPrompt) + ";\n";
@@ -54,16 +56,18 @@
 
         let result = null;
         let pr = new Promise((resolve, reject) => {
-          let wk = new Worker("worker.js");
+          if (wk == null) {
+            wk = new Worker("worker.js");
+          };
           let stp = function() {
             wk.terminate();
-            reject("timeout");
+            wk = null;
+            resolve("timeout"); // deal the error as normal timeout event
           };
           let brk = setTimeout(stp, 100);
           wk.onmessage = function(evt) {
             clearTimeout(brk);
             result = JSON.parse(evt.data);
-            wk.terminate();
             resolve(result);
           };
           wk.postMessage(compositeText);
