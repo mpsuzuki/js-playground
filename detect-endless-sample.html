@@ -1,0 +1,33 @@
+<html>
+<head>
+</head>
+<body>
+<input type="button" id="start" value="start"/>
+<script>
+let tryer = function() {
+  let prms = new Promise((resolve, reject) => {
+    let wk = new Worker("worker.js");
+    let killer = function() {
+      wk.terminate();
+      reject("timeout");
+    };
+    let breaker = setTimeout(killer, 100);
+    wk.onmessage = function(evt) {
+      clearTimeout(breaker);
+      result = JSON.parse(evt.data);
+      wk.terminate();
+      resolve(result);
+    };
+    wk.postMessage("let i=0;while(1){console.log(i);i+=1};");
+  });
+  prms.then((v) => {
+    console.log(v);
+  }).catch((v) => {
+    console.log(v)
+  });
+};
+
+document.getElementById("start").addEventListener("click", tryer);
+</script>
+</body>
+</html>
