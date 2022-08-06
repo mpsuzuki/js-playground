@@ -59,7 +59,7 @@
             wk.terminate();
             reject("timeout");
           };
-          let brk = setTimeout(stp, 1000);
+          let brk = setTimeout(stp, 100);
           wk.onmessage = function(evt) {
             clearTimeout(brk);
             result = JSON.parse(evt.data);
