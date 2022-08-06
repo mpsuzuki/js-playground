@@ -5,7 +5,7 @@ onmessage = function(evt) {
     let fnTry = new Function( evt.data );
     result.result = fnTry();
   } catch (err) {
-    result.error = err;
+    result.error = err.toString();
   };
   postMessage( JSON.stringify(result) );
 }
