@@ -5,6 +5,9 @@
         border-collapse: collapse;
         border: 1px solid black;
       }
+      td.testing {
+        vertical-align: top;
+      }
       div.setting > input {
         margin: 4px;
       }
@@ -41,7 +44,7 @@
       let elmInputForPrompt = document.getElementById("inputForPrompt");
 
       let progFragments = null;
-      let strJsonForPrompt = "";
+      let jsonForPrompt = null;
 
       let handleFileSelector = function() {
         progFragments = {};
@@ -100,68 +103,30 @@
         return pr;
       };
 
-
-      let enqueEvaluationForTD = function(jsonForPrompt, fragment, elmTR, errorFull, resolve) {
-        if (jsonForPrompt.length > 0) {
-          evaluateSingleFragment(jsonForPrompt.shift(), fragment)
-          .then((result) => {
-
-            let elmTD = document.createElement("td");
-            elmTR.appendChild(elmTD);
-
-            let txtRESULT = null;
-            if (result.alert && result.alert.length > 0) {
-              txtRESULT = document.createTextNode(result.alert[0]);
-            } else if (result.error) {
-              if (errorFull) {
-                txtRESULT = document.createTextNode(result.error);
-              } else {
-                txtRESULT = document.createTextNode(result.error.split(/\s*:\s*/)[0]);
-              }
-            };
-            elmTD.appendChild(txtRESULT);
-
-            enqueEvaluationForTD(jsonForPrompt, fragment, elmTR, errorFull, resolve);
-          });
-        } else {
-          resolve();
-        };
-      };
-
-      let enqueEvaluationForTR = function(objToDo) {
-        console.log(objToDo.name + "...do");
-
-        let prTR = new Promise((resolveTR, rejectTR) => {
-          // append elmTR after all cells are created to prevent broken layout
-          let elmTR = document.createElement("tr");
-
-          let elmTH = document.createElement("th");
-          elmTR.appendChild(elmTH);
-
-          let name_filtered = objToDo.name.replace(/_[0-9]{4}(-[0-9]{2}){5}\.js/, ""); // remove date-time.js suffix
-          let txtNAME = document.createTextNode(name_filtered);
-          elmTH.appendChild(txtNAME);
-
-          let jsonForPrompt = JSON.parse(strJsonForPrompt);
-
-          let prTD = new Promise((resolveTD, rejectTD) => {
-            enqueEvaluationForTD(jsonForPrompt, objToDo.fragment, elmTR, jsonForPrompt.length == 1, resolveTD);
-          });
-          prTD.then(() => {
-            console.log(elmTR.firstChild.textContent + "...done");
-            elmTBODY.appendChild(elmTR);
-          });
-          resolveTR();
-        });
-        return prTR;
-      };
-
-      let enqueEvaluation = function(arrToDo) {
+      let recursiveProc = function(arrToDo) {
         if (arrToDo.length > 0) {
           let objToDo = arrToDo.shift();
-          let prTR = enqueEvaluationForTR(objToDo);
-          prTR.then(() => {
-            enqueEvaluation(arrToDo);
+
+          let progFragment = progFragments[ objToDo.name ];
+          let arrForPrompt = jsonForPrompt[ objToDo.prompt_i ];
+          evaluateSingleFragment(arrForPrompt, progFragment)
+          .then((result) => {
+            let result_txt = null;
+            if (result.alert) {
+              result.alert.forEach((a, i, arr) => {
+                if (i > 0) {
+                  objToDo.elmTD.appendChild( document.createElement("br") );
+                };
+                objToDo.elmTD.appendChild( document.createTextNode(a) );
+              });
+            } else {
+              result_txt = result.error.split(":")[0];
+              objToDo.elmTD.appendChild( document.createTextNode(result_txt) );
+            };
+
+            if (arrToDo.length > 0) {
+              recursiveProc(arrToDo);
+            };
           });
         };
       };
@@ -175,10 +140,9 @@
         elmTH.appendChild(txt);
 
         {
-          let jsonForPrompt = JSON.parse(strJsonForPrompt);
-          while (jsonForPrompt.length > 0) {
+          for (const arrForPrompt of jsonForPrompt) {
             let elmTH = document.createElement("th");
-            let txt = document.createTextNode(jsonForPrompt.shift().join(";"));
+            let txt = document.createTextNode(arrForPrompt.join(";"));
             elmTH.appendChild(txt);
             elmTR.appendChild(elmTH);
           };
@@ -187,7 +151,7 @@
         elmTHEAD.appendChild(elmTR);
       };
 
-      // use global variables: progFragments and strJsonForPrompt
+      // use global variables: progFragments and jsonForPrompt
       let prepareEmptyTable = function() {
         while (elmTHEAD.lastChild) { 
           elmTHEAD.removeChild(elmTHEAD.lastChild);
@@ -197,25 +161,35 @@
           elmTBODY.removeChild(elmTBODY.lastChild);
         };
 
-        // use a global variable strJsonForPrompt.
+        // use a global variable jsonForPrompt.
         prepareTHEAD();
 
         let numTD = elmTHEAD.getElementsByTagName("th").length - 1;
         Object.keys( progFragments ).sort().forEach((name) => {
-          let name_filtered = name.replace(/_[0-9]{4}(-[0-9]{2}){5}\.js/, ""); // remove date-time.js suffix
+          let name_short = name.replace(/_[0-9]{4}(-[0-9]{2}){5}\.js/, ""); // remove date-time.js suffix
 
           let elmTR = document.createElement("tr");
-          elmTR.classList.add(name_filtered);
+          // elmTR.classList.add(name_short);
+          elmTR.setAttribute("data-name-fragment", name);
+          elmTR.setAttribute("data-name-fragment-short", name_short);
+
           let elmTH = document.createElement("th");
           elmTR.appendChild(elmTH);
-          let txt = document.createTextNode(name_filtered);
+          elmTH.setAttribute("data-name-fragment", name);
+          elmTH.setAttribute("data-name-fragment-short", name_short);
+
+          let txt = document.createTextNode(name_short);
           elmTH.appendChild(txt);
 
           for (let i = 0; i < numTD; i += 1) {
             let elmTD = document.createElement("td");
             elmTR.appendChild(elmTD);
-            elmTD.classList.add(name_filtered);
-            elmTD.classList.add("prompt" + i.toString());
+            // elmTD.classList.add(name_short);
+            // elmTD.classList.add("prompt" + i.toString());
+            elmTD.classList.add("testing");
+            elmTD.setAttribute("data-name-fragment", name);
+            elmTD.setAttribute("data-name-fragment-short", name_short);
+            elmTD.setAttribute("data-prompt-set", i);
           };
 
           elmTBODY.appendChild(elmTR);
@@ -224,9 +198,8 @@
 
       let evaluateFragments = function() {
         if (elmInputDataAsJson.checked) {
-          strJsonForPrompt = elmInputForPrompt.value;
           try {
-            JSON.parse(strJsonForPrompt);
+            jsonForPrompt = JSON.parse(elmInputForPrompt.value);
           } catch (err) {
             elmInputForPrompt.style.backgroundColor = "pink";
             return;
@@ -234,24 +207,28 @@
           elmInputForPrompt.style.backgroundColor = "";
         } else
         if (elmInputDataAsCsv.checked) {
-          let jsonForPrompt = elmInputForPrompt.value.split(/\s*,\s*/).map((v) => { return [v] });
-          strJsonForPrompt = JSON.stringify(jsonForPrompt);
+          jsonForPrompt = elmInputForPrompt.value.split(/\s*,\s*/).map((v) => { return [v] });
           elmInputForPrompt.style.backgroundColor = "";
         };
 
         prepareEmptyTable();
-
-/*
         let arrToDo = [];
-        Object.keys( progFragments ).sort().forEach((k) => {
-          let objToDo = {};
-          objToDo.name = k;
-          objToDo.fragment = progFragments[k];
-          arrToDo.push(objToDo);
-        });
 
-        enqueEvaluation(arrToDo);
-*/
+        for (const elmTD of document.querySelectorAll("td.testing")) {
+          const name = elmTD.getAttribute("data-name-fragment");
+          const name_short = elmTD.getAttribute("data-name-fragment-short");
+          const prompt_i = parseInt(elmTD.getAttribute("data-prompt-set"));
+
+          let objToDo = {};
+          objToDo.name = name;
+          objToDo.name_short = name_short;
+          objToDo.prompt_i = prompt_i;
+          objToDo.elmTD = elmTD;
+
+          arrToDo.push(objToDo);
+        };
+
+        recursiveProc(arrToDo);
       };
 
       let updatePlaceHolderText = function() {
