@@ -8,7 +8,7 @@
       div.setting > input {
         margin: 4px;
       }
-      #jsonForPrompt {
+      #inputForPrompt {
         width: 400px;
       }
     </style>
@@ -17,7 +17,9 @@
     <div class="setting">
       <input type="file" id="fileSelector" multiple>
       <br>
-      <input type="text" id="jsonForPrompt" placeholder='[["test1-prompt1", "test1-prompt2"], ["test2-prompt1", ...], ... ]'>
+      <input type="text" id="inputForPrompt" placeholder='[["test1-prompt1", "test1-prompt2"], ["test2-prompt1", ...], ... ]'>
+      <input type="radio" name="input_data_format" id="as_json" value="as_json" checked><label for="as_json">JSON</label>
+      <input type="radio" name="input_data_format" id="as_csv" value="as_csv"><label for="as_csv">CSV</label>
       <br>
       <input type="button" id="startEvaluate" value="evaluate">
     </div>
@@ -30,11 +32,13 @@
     </div>
     <script>
       let elmFileSelector = document.getElementById("fileSelector");
+      let elmInputDataAsJson = document.getElementById("as_json");
+      let elmInputDataAsCsv = document.getElementById("as_csv");
       let elmStartEvaluate = document.getElementById("startEvaluate");
       let elmTABLE = document.getElementsByTagName("table")[0];
       let elmTHEAD = document.getElementsByTagName("thead")[0];
       let elmTBODY = document.getElementsByTagName("tbody")[0];
-      let elmJsonForPrompt = document.getElementById("jsonForPrompt");
+      let elmInputForPrompt = document.getElementById("inputForPrompt");
 
       let progFragments = {};
       let strJsonForPrompt = "";
@@ -178,7 +182,13 @@
 
 
       let evaluateFragments = function() {
-        strJsonForPrompt = elmJsonForPrompt.value;
+        if (elmInputDataAsJson.checked) {
+          strJsonForPrompt = elmInputForPrompt.value;
+        } else
+        if (elmInputDataAsCsv.checked) {
+          let jsonForPrompt = elmInputForPrompt.value.split(/\s*,\s*/).map((v) => { return [v] });
+          strJsonForPrompt = JSON.stringify(jsonForPrompt);
+        };
 
         while (elmTHEAD.lastChild) { 
           elmTHEAD.removeChild(elmTHEAD.lastChild);
@@ -200,8 +210,19 @@
         enqueEvaluation(arrToDo);
       };
 
+      let updatePlaceHolderText = function() {
+        if (elmInputDataAsJson.checked) {
+          elmInputForPrompt.placeholder = '[["test1-prompt1", "test1-prompt2"], ["test2-prompt1", ...], ... ]'
+        } else
+        if (elmInputDataAsCsv.checked) {
+          elmInputForPrompt.placeholder = '"test1-prompt", "test2-prompt", ...'
+        };
+      };
+
       elmFileSelector.addEventListener("change", handleFileSelector);
       elmStartEvaluate.addEventListener("click", evaluateFragments);
+      elmInputDataAsCsv.addEventListener("change", updatePlaceHolderText);
+      elmInputDataAsJson.addEventListener("change", updatePlaceHolderText);
     </script>
   </body>
 </html>
