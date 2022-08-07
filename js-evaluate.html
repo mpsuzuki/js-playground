@@ -40,10 +40,11 @@
       let elmTBODY = document.getElementsByTagName("tbody")[0];
       let elmInputForPrompt = document.getElementById("inputForPrompt");
 
-      let progFragments = {};
+      let progFragments = null;
       let strJsonForPrompt = "";
 
       let handleFileSelector = function() {
+        progFragments = {};
 
         let srcFiles = elmFileSelector.files;
 
@@ -84,7 +85,7 @@
             wk.terminate();
             wk = null;
             result = {};
-            result.error = "timeout";
+            result.error = "Timeout";
             resolve(result);
           };
           let brk = setTimeout(stp, 1000);
@@ -100,7 +101,7 @@
       };
 
 
-      let enqueEvaluationForTD = function(jsonForPrompt, fragment, elmTR, resolve) {
+      let enqueEvaluationForTD = function(jsonForPrompt, fragment, elmTR, errorFull, resolve) {
         if (jsonForPrompt.length > 0) {
           evaluateSingleFragment(jsonForPrompt.shift(), fragment)
           .then((result) => {
@@ -111,12 +112,16 @@
             let txtRESULT = null;
             if (result.alert && result.alert.length > 0) {
               txtRESULT = document.createTextNode(result.alert[0]);
-            } else {
-              txtRESULT = document.createTextNode(result.error);
+            } else if (result.error) {
+              if (errorFull) {
+                txtRESULT = document.createTextNode(result.error);
+              } else {
+                txtRESULT = document.createTextNode(result.error.split(/\s*:\s*/)[0]);
+              }
             };
             elmTD.appendChild(txtRESULT);
 
-            enqueEvaluationForTD(jsonForPrompt, fragment, elmTR, resolve);
+            enqueEvaluationForTD(jsonForPrompt, fragment, elmTR, errorFull, resolve);
           });
         } else {
           resolve();
@@ -124,6 +129,8 @@
       };
 
       let enqueEvaluationForTR = function(objToDo) {
+        console.log(objToDo.name + "...do");
+
         let prTR = new Promise((resolveTR, rejectTR) => {
           // append elmTR after all cells are created to prevent broken layout
           let elmTR = document.createElement("tr");
@@ -138,9 +145,10 @@
           let jsonForPrompt = JSON.parse(strJsonForPrompt);
 
           let prTD = new Promise((resolveTD, rejectTD) => {
-            enqueEvaluationForTD(jsonForPrompt, objToDo.fragment, elmTR, resolveTD);
+            enqueEvaluationForTD(jsonForPrompt, objToDo.fragment, elmTR, jsonForPrompt.length == 1, resolveTD);
           });
           prTD.then(() => {
+            console.log(elmTR.firstChild.textContent + "...done");
             elmTBODY.appendChild(elmTR);
           });
           resolveTR();
@@ -151,7 +159,6 @@
       let enqueEvaluation = function(arrToDo) {
         if (arrToDo.length > 0) {
           let objToDo = arrToDo.shift();
-
           let prTR = enqueEvaluationForTR(objToDo);
           prTR.then(() => {
             enqueEvaluation(arrToDo);
@@ -184,10 +191,18 @@
       let evaluateFragments = function() {
         if (elmInputDataAsJson.checked) {
           strJsonForPrompt = elmInputForPrompt.value;
+          try {
+            JSON.parse(strJsonForPrompt);
+          } catch (err) {
+            elmInputForPrompt.style.backgroundColor = "pink";
+            return;
+          };
+          elmInputForPrompt.style.backgroundColor = "";
         } else
         if (elmInputDataAsCsv.checked) {
           let jsonForPrompt = elmInputForPrompt.value.split(/\s*,\s*/).map((v) => { return [v] });
           strJsonForPrompt = JSON.stringify(jsonForPrompt);
+          elmInputForPrompt.style.backgroundColor = "";
         };
 
         while (elmTHEAD.lastChild) { 
@@ -200,12 +215,12 @@
         };
 
         let arrToDo = [];
-        for (const [k, v] of Object.entries( progFragments ) ) {
+        Object.keys( progFragments ).sort().forEach((k) => {
           let objToDo = {};
           objToDo.name = k;
-          objToDo.fragment = v;
+          objToDo.fragment = progFragments[k];
           arrToDo.push(objToDo);
-        };
+        });
 
         enqueEvaluation(arrToDo);
       };
@@ -226,5 +241,3 @@
     </script>
   </body>
 </html>
-
-
