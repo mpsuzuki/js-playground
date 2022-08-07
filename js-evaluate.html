@@ -155,12 +155,36 @@
         };
       };
 
+      let prepareTHEAD = function() {
+        let elmTR = document.createElement("tr");
+
+        let elmTH = document.createElement("th");
+        let txt = document.createTextNode("id");
+        elmTR.appendChild(elmTH);
+        elmTH.appendChild(txt);
+
+        {
+          let jsonForPrompt = JSON.parse(strJsonForPrompt);
+          while (jsonForPrompt.length > 0) {
+            let elmTH = document.createElement("th");
+            let txt = document.createTextNode(jsonForPrompt.shift().join(";"));
+            elmTH.appendChild(txt);
+            elmTR.appendChild(elmTH);
+          };
+        }
+
+        elmTHEAD.appendChild(elmTR);
+      };
+
+
       let evaluateFragments = function() {
         strJsonForPrompt = elmJsonForPrompt.value;
 
         while (elmTHEAD.lastChild) { 
           elmTHEAD.removeChild(elmTBODY.lastChild);
         };
+        prepareTHEAD();
+
         while (elmTBODY.lastChild) {
           elmTBODY.removeChild(elmTBODY.lastChild);
         };
