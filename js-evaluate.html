@@ -85,7 +85,7 @@
 
         let result = null;
         let pr = new Promise((resolve, reject) => {
-          if (wk) {
+          if (!wk) {
             wk = new Worker("worker.js");
           };
           let stp = function() {
