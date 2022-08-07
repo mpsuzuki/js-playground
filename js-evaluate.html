@@ -81,9 +81,13 @@
 
         let compositeText = prefixText + progFragment + postfixText;
 
+        let wk = new Worker("worker.js");
+
         let result = null;
         let pr = new Promise((resolve, reject) => {
-          let wk = new Worker("worker.js");
+          if (wk) {
+            wk = new Worker("worker.js");
+          };
           let stp = function() {
             wk.terminate();
             wk = null;
@@ -95,6 +99,7 @@
           wk.onmessage = function(evt) {
             clearTimeout(brk);
             wk.terminate();
+            wk = null;
             result = JSON.parse(evt.data);
             resolve(result);
           };
