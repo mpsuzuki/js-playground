@@ -1,5 +1,9 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Batch evaluator for JavaScript fragments</title>
     <style>
       table, tr, td, th {
         border-collapse: collapse;
@@ -18,7 +22,7 @@
   </head>
   <body>
     <div class="setting">
-      <input type="file" id="fileSelector" multiple>
+      <input type="file" id="fileSelector" title="js_fragments_to_evaluate" multiple>
       <br>
       <input type="text" id="inputForPrompt" placeholder='"test1-prompt", "test2-prompt1", ...'>
       <input type="radio" name="input_data_format" id="as_csv" value="as_csv" checked><label for="as_csv">CSV</label>
