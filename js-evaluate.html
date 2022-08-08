@@ -5,7 +5,7 @@
         border-collapse: collapse;
         border: 1px solid black;
       }
-      td.testing {
+      td.tested {
         vertical-align: top;
       }
       div.setting > input {
@@ -86,6 +86,7 @@
         let result = null;
         let pr = new Promise((resolve, reject) => {
           if (!wk) {
+            console.log("WebWorker respawn");
             wk = new Worker("worker.js");
           };
           let stp = function() {
@@ -128,6 +129,8 @@
               result_txt = result.error.split(":")[0];
               objToDo.elmTD.appendChild( document.createTextNode(result_txt) );
             };
+            objToDo.elmTD.classList.remove("testing");
+            objToDo.elmTD.classList.add("tested");
 
             if (arrToDo.length > 0) {
               recursiveProc(arrToDo);
@@ -171,6 +174,13 @@
 
         let numTD = elmTHEAD.getElementsByTagName("th").length - 1;
         Object.keys( progFragments ).sort().forEach((name) => {
+          let err_msg = null;
+          try {
+            let fnTry = new Function( progFragments[name] );
+          } catch(err) { // if function compilation failes, do not test any prompts.
+            err_msg = err.toString();
+          };
+
           let name_short = name.replace(/_[0-9]{4}(-[0-9]{2}){5}\.js/, ""); // remove date-time.js suffix
 
           let elmTR = document.createElement("tr");
@@ -191,7 +201,12 @@
             elmTR.appendChild(elmTD);
             // elmTD.classList.add(name_short);
             // elmTD.classList.add("prompt" + i.toString());
-            elmTD.classList.add("testing");
+            if (err_msg) {
+              elmTD.classList.add("tested");
+              elmTD.appendChild( document.createTextNode(err_msg.split(":")[0]) );
+            } else {
+              elmTD.classList.add("testing");
+            };
             elmTD.setAttribute("data-name-fragment", name);
             elmTD.setAttribute("data-name-fragment-short", name_short);
             elmTD.setAttribute("data-prompt-set", i);
