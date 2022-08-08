@@ -72,6 +72,8 @@
         };
       };
 
+      let wk = new Worker("worker.js");
+
       let evaluateSingleFragment = function(arrForPrompt, progFragment) {
         let prefixText  = "";
             prefixText += "let arrForPrompt = " + JSON.stringify(arrForPrompt) + ";\n";
@@ -86,8 +88,6 @@
             postfixText += "return result;\n";
 
         let compositeText = prefixText + progFragment + postfixText;
-
-        let wk = new Worker("worker.js");
 
         let result = null;
         let pr = new Promise((resolve, reject) => {
@@ -105,8 +105,6 @@
           let brk = setTimeout(stp, 1000);
           wk.onmessage = function(evt) {
             clearTimeout(brk);
-            wk.terminate();
-            wk = null;
             result = JSON.parse(evt.data);
             resolve(result);
           };
