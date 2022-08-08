@@ -20,9 +20,9 @@
     <div class="setting">
       <input type="file" id="fileSelector" multiple>
       <br>
-      <input type="text" id="inputForPrompt" placeholder='[["test1-prompt1", "test1-prompt2"], ["test2-prompt1", ...], ... ]'>
-      <input type="radio" name="input_data_format" id="as_json" value="as_json" checked><label for="as_json">JSON</label>
-      <input type="radio" name="input_data_format" id="as_csv" value="as_csv"><label for="as_csv">CSV</label>
+      <input type="text" id="inputForPrompt" placeholder='"test1-prompt", "test2-prompt1", ...'>
+      <input type="radio" name="input_data_format" id="as_csv" value="as_csv" checked><label for="as_csv">CSV</label>
+      <input type="radio" name="input_data_format" id="as_json" value="as_json"><label for="as_json">JSON</label>
       <br>
       <input type="button" id="startEvaluate" value="evaluate">
     </div>
@@ -34,6 +34,8 @@
       </table>
     </div>
     <script>
+      "use strict";
+
       let elmFileSelector = document.getElementById("fileSelector");
       let elmInputDataAsJson = document.getElementById("as_json");
       let elmInputDataAsCsv = document.getElementById("as_csv");
@@ -230,6 +232,7 @@
           jsonForPrompt = elmInputForPrompt.value.split(/\s*,\s*/).map((v) => { return [v] });
           elmInputForPrompt.style.backgroundColor = "";
         };
+        Object.freeze(jsonForPrompt);
 
         prepareEmptyTable();
         let arrToDo = [];
