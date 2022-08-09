@@ -18,6 +18,9 @@
       #inputForPrompt {
         width: 400px;
       }
+      #hrefToDownloadBlob {
+        width: 100px;
+      }
     </style>
   </head>
   <body>
@@ -29,6 +32,8 @@
       <input type="radio" name="input_data_format" id="as_json" value="as_json"><label for="as_json">JSON</label>
       <br>
       <input type="button" id="startEvaluate" value="evaluate">
+      <a id="hrefToDownloadBlob" style="display:none;" href="" download="">DnLd Blob</a>
+      </span>
     </div>
     <br>
     <div class="evaluated">
@@ -48,9 +53,11 @@
       let elmTHEAD = document.getElementsByTagName("thead")[0];
       let elmTBODY = document.getElementsByTagName("tbody")[0];
       let elmInputForPrompt = document.getElementById("inputForPrompt");
+      let elmHrefToDownloadBlob = document.getElementById("hrefToDownloadBlob");
 
       let progFragments = null;
       let jsonForPrompt = null;
+      let jsonForResult = null;
 
       let handleFileSelector = function() {
         progFragments = {};
@@ -70,6 +77,22 @@
 
           Promise.all(promisesForFiles).then((val) => {elmFileSelector.disabled = false});
         };
+      };
+
+      let showBlobDownloader = function() {
+        const dt = new Date();
+        const defaultFilename = "js-evaluate-result-" +
+                               ("0000" + dt.getFullYear().toString()).slice(-4) + 
+                               ("00" + (dt.getMonth() + 1).toString()).slice(-2) + 
+                               ("00" + dt.getDate().toString()).slice(-2) + 
+                                "-" +
+                               ("00" + dt.getHours().toString()).slice(-2) + 
+                               ("00" + dt.getMinutes().toString()).slice(-2) +
+                                ".json";
+        const blob = new Blob([JSON.stringify(jsonForResult)], {type: "application/json"});
+        elmHrefToDownloadBlob.href = URL.createObjectURL(blob);
+        elmHrefToDownloadBlob.download = defaultFilename;
+        elmHrefToDownloadBlob.style.display = "inline";
       };
 
       let wk = new Worker("worker.js");
@@ -129,15 +152,20 @@
                 };
                 objToDo.elmTD.appendChild( document.createTextNode(a) );
               });
+              jsonForResult[objToDo.name_short][ arrForPrompt.join("\n") ] = result.alert.join("\n");
             } else {
               result_txt = result.error.split(":")[0];
               objToDo.elmTD.appendChild( document.createTextNode(result_txt) );
+              jsonForResult[objToDo.name_short][ arrForPrompt.join("\n") ] = result.error;
             };
             objToDo.elmTD.classList.remove("testing");
             objToDo.elmTD.classList.add("tested");
 
+
             if (arrToDo.length > 0) {
               recursiveProc(arrToDo);
+            } else {
+              showBlobDownloader();
             };
           });
         };
@@ -165,6 +193,10 @@
 
       // use global variables: progFragments and jsonForPrompt
       let prepareEmptyTable = function() {
+        jsonForResult = {};
+
+        elmHrefToDownloadBlob.style.display = "none";
+
         while (elmTHEAD.lastChild) { 
           elmTHEAD.removeChild(elmTHEAD.lastChild);
         };
@@ -186,6 +218,7 @@
           };
 
           let name_short = name.replace(/_[0-9]{4}(-[0-9]{2}){5}\.js/, ""); // remove date-time.js suffix
+          jsonForResult[name_short] = {};
 
           let elmTR = document.createElement("tr");
           // elmTR.classList.add(name_short);
@@ -208,6 +241,7 @@
             if (err_msg) {
               elmTD.classList.add("tested");
               elmTD.appendChild( document.createTextNode(err_msg.split(":")[0]) );
+              jsonForResult[name_short][ jsonForPrompt[i].join("\n") ] = err_msg;
             } else {
               elmTD.classList.add("testing");
             };
