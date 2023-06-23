@@ -7,7 +7,7 @@
   font-family: "RD-WOFF";
   src: url("RictyDiminished-Regular.woff");
 }
-#code-text {
+div.hwt-container > * {
   font-size: 16pt;
   font-family: "Ricty Diminished", "RD-WOFF";
 }
