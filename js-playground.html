@@ -7,7 +7,6 @@
     <script src="https://code.jquery.com/jquery.min.js"></script>
     <link href="https://lonekorean.github.io/highlight-within-textarea/jquery.highlight-within-textarea.css" rel="stylesheet">
     <script src="https://lonekorean.github.io/highlight-within-textarea/jquery.highlight-within-textarea.js"></script>
-    <link rel="modulepreload" href="https://www.jslint.com/jslint.mjs">
   </head>
   <body>
     <div>
@@ -15,8 +14,8 @@
         <a class="css-btn add-csv-file"><span>add csv-file</span></a>
         <a class="css-btn del-last"><span>del last</span></a>
       </div>
-      <textarea id="code-text" style="width:400pt; height:150pt;">v0 = 0;
-console.log("now v0=" + v0);
+      <textarea id="code-text" style="width:400pt; height:150pt;">let v0 = 0;
+v0 = v0 + 1;
 </textarea>
     </div>
     <div>
