@@ -279,6 +279,21 @@ document.querySelectorAll("*.del-last").forEach(function(elm){
   });
 });
 
+let updateVarValueSetterType = function(evt) {
+  let elmRadioButton = evt.currentTarget;
+  if (elmRadioButton.checked) {
+    let elmInputValue = elmRadioButton.parentElement.querySelector("input.var-set");
+    let valType = elmRadioButton.value;
+    if (valType == "number") {
+      elmInputValue.setAttribute("type", "number");
+      elmInputValue.setAttribute("step", "any");
+    } else {
+      elmInputValue.setAttribute("type", "text");
+      elmInputValue.removeAttribute("step");
+    }
+  };
+};
+
 document.querySelectorAll("*.add-var-set").forEach(function(elm){
   elm.addEventListener("click",function(evt){
     let elmDivParent = evt.currentTarget.parentElement;
@@ -297,13 +312,50 @@ document.querySelectorAll("*.add-var-set").forEach(function(elm){
     elmDiv.appendChild(document.createTextNode("="));
 
     let elmInputVarValue = document.createElement("input");
+    elmInputVarValue.classList.add("var-set");
     elmInputVarValue.setAttribute("type", "text");
     elmInputVarValue.style.width = "120pt";
     elmInputVarValue.value = "3.14";
     elmDiv.appendChild(elmInputVarValue);
 
+    elmDiv.appendChild(document.createTextNode("\n"));
+
+    let nmRadioGroup = "value-type-of-" + elmInputVarName.value;
+    let elmRadioButton;
+    elmRadioButton = document.createElement("input");
+    elmRadioButton.classList.add("value-type-radio");
+    elmRadioButton.setAttribute("type", "radio");
+    elmRadioButton.setAttribute("name", nmRadioGroup);
+    elmRadioButton.value = "free";
+    elmRadioButton.checked = true;
+    elmRadioButton.addEventListener("change", updateVarValueSetterType);
+    elmDiv.appendChild(elmRadioButton);
+    elmDiv.appendChild(document.createTextNode(elmRadioButton.value + " "));
+
+    elmRadioButton = document.createElement("input");
+    elmRadioButton.classList.add("value-type-radio");
+    elmRadioButton.setAttribute("type", "radio");
+    elmRadioButton.setAttribute("name", nmRadioGroup);
+    elmRadioButton.value = "number";
+    elmRadioButton.addEventListener("change", updateVarValueSetterType);
+    elmDiv.appendChild(elmRadioButton);
+    elmDiv.appendChild(document.createTextNode(elmRadioButton.value + " "));
+
+    elmRadioButton = document.createElement("input");
+    elmRadioButton.classList.add("value-type-radio");
+    elmRadioButton.setAttribute("type", "radio");
+    elmRadioButton.setAttribute("name", nmRadioGroup);
+    elmRadioButton.value = "string";
+    elmRadioButton.addEventListener("change", updateVarValueSetterType);
+    elmDiv.appendChild(elmRadioButton);
+    elmDiv.appendChild(document.createTextNode(elmRadioButton.value + " "));
+
     elmDivParent.appendChild(elmDiv);
   });
+});
+
+document.querySelectorAll("input.value-type-radio").forEach(function(elm){
+  elm.addEventListener("change", updateVarValueSetterType);
 });
 
 document.querySelectorAll("*.add-var-get").forEach(function(elm){
