@@ -1,5 +1,3 @@
-import jslint from "https://www.jslint.com/jslint.mjs";
-
 let isInt = function(s) {
   return /^[\-\+]?\d+$/.test(s);
 };
