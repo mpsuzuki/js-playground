@@ -21,6 +21,24 @@ let isFloat = function(s) {
   return false;
 };
 
+let isSymbolicValue = function(s) {
+  if (s == "true" || s == "false") {
+    return true;
+  };
+  if (s == "null" || s == "undefined" || s == "NaN") {
+    return true;
+  };
+  return false;
+}
+
+let isQuotedString = function(s) {
+  if ((s.substr(0,1) == "'") && (s.substr(-1,1) == "'"))
+    return 1;
+  if ((s.substr(0,1) == '"') && (s.substr(-1,1) == '"'))
+    return 2;
+  return 0;
+}
+
 let getDateTimeStr = function() {
   let dt = new Date();
   let k = ("0000" + dt.getFullYear().toString()).slice(-4) +
@@ -106,9 +124,10 @@ document.getElementById("exec").addEventListener("click", function(){
 
     /* simple variable-value pair */
     if (dataItems[i].classList.contains("var-name-value-set")) {
+      let v = inputs[1].value.trim();
       jsDataInits[i]  = "let " + inputs[0].value;
       jsDataInits[i] += " = ";
-      jsDataInits[i] += "\'" + inputs[1].value + "\';";
+      jsDataInits[i] += v + ";";
     } else
     /* CSV file loader */
     if (dataItems[i].classList.contains("var-name-file")) {
@@ -262,7 +281,7 @@ document.querySelectorAll("*.del-last").forEach(function(elm){
 
 document.querySelectorAll("*.add-var-set").forEach(function(elm){
   elm.addEventListener("click",function(evt){
-    let elmDivParent = evt.target.parentElement;
+    let elmDivParent = evt.currentTarget.parentElement;
     let cntItems = elmDivParent.querySelectorAll("div.data-item").length;
 
     let elmDiv = document.createElement("div");
@@ -346,6 +365,7 @@ let l10nButtons = function() {
   default:
     cssSelector2val = {
       "div.input-data > a.add-csv-file > span": "入力用のCSVファイルを追加",
+      "div.input-data > a.add-var-set > span": "初期設定変数を追加",
       "div.input-data > a.del-last > span": "最後のひとつを削除",
       "div.output-data > a.add-var-get > span": "表示する変数を追加",
       "div.output-data > a.del-last > span": "最後のひとつを削除",
