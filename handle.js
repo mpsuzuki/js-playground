@@ -114,6 +114,7 @@ document.getElementById("exec").addEventListener("click", function(){
 
   for (let i = 0; i < dataItems.length; i += 1) {
     let inputs = dataItems[i].getElementsByTagName("input");
+    let radio  = dataItems[i].querySelector("input.value-type-radio:checked");
 
     if (!checkVariableNameSyntax(inputs[0].value)) {
       inputs[0].style.backgroundColor = "pink";
@@ -127,7 +128,20 @@ document.getElementById("exec").addEventListener("click", function(){
       let v = inputs[1].value.trim();
       jsDataInits[i]  = "let " + inputs[0].value;
       jsDataInits[i] += " = ";
-      jsDataInits[i] += v + ";";
+      if (radio.value == "string") {
+        if (!v.includes("'")) {
+          jsDataInits[i] += "'" + v + "' ;";
+        } else
+        if (!v.includes('"')) {
+          jsDataInits[i] += '"' + v + '" ;';
+        } else
+        if (!v.includes("`")) {
+          jsDataInits[i] += "`" + v + "` ;";
+        } else
+          jsDataInits[i] += v + " ;";
+      } else {
+        jsDataInits[i] += v.trim() + ";";
+      }
     } else
     /* CSV file loader */
     if (dataItems[i].classList.contains("var-name-file")) {
@@ -326,7 +340,7 @@ document.querySelectorAll("*.add-var-set").forEach(function(elm){
     elmRadioButton.classList.add("value-type-radio");
     elmRadioButton.setAttribute("type", "radio");
     elmRadioButton.setAttribute("name", nmRadioGroup);
-    elmRadioButton.value = "free";
+    elmRadioButton.value = "js";
     elmRadioButton.checked = true;
     elmRadioButton.addEventListener("change", updateVarValueSetterType);
     elmDiv.appendChild(elmRadioButton);
