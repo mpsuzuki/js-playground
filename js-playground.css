@@ -19,7 +19,7 @@ textarea.visible-space {
   font-size: 16pt;
   font-family: "DotLine", "Ricty Diminished", "RD-WOFF";
 }
-input[type="text"] {
+input[type="text"], input[type="number"] {
   font-size: 16pt;
   font-family: "Ricty Diminished", "RD-WOFF";
 }
