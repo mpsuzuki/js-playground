@@ -1,7 +1,11 @@
 div.input-data > *.add-csv-file { display: none; }
-div.input-data > *.del-last { display: none; }
+
+div.input-data > *.add-var-set { display: inline-block; }
+div.input-data > *.del-last { display: inline-block; }
+
 div.output-data > *.add-var-get { display: inline-block; }
 div.output-data > *.del-last { display: inline-block; }
+
 #exec { display: inline-block; }
 #break_if_in_debugger { display: none; }
 #break-before-exec { display: none; }
