@@ -296,14 +296,41 @@ document.querySelectorAll("*.del-last").forEach(function(elm){
 let updateVarValueSetterType = function(evt) {
   let elmRadioButton = evt.currentTarget;
   if (elmRadioButton.checked) {
-    let elmInputValue = elmRadioButton.parentElement.querySelector("input.var-set");
     let valType = elmRadioButton.value;
+    let elmInputVarValue = elmRadioButton.parentElement.querySelector("input.var-set");
+    let valTypeOld = elmInputVarValue.getAttribute("data-value-type");
+    let valOld = elmInputVarValue.value;
+    elmInputVarValue.setAttribute("data-value-type", valType);
     if (valType == "number") {
-      elmInputValue.setAttribute("type", "number");
-      elmInputValue.setAttribute("step", "any");
+      elmInputVarValue.setAttribute("type", "number");
+      elmInputVarValue.setAttribute("step", "any");
+      if (isInt(valOld)) {
+        elmInputVarValue.value = parseInt(valOld);
+      } else if (isFloat(valOld)) {
+        elmInputVarValue.value = parseFloat(valOld);
+      } else {
+        elmInputVarValue.value = "";
+      }
+    } else if (valType == "js" && valTypeOld == "string") {
+      elmInputVarValue.setAttribute("type", "text");
+      elmInputVarValue.removeAttribute("step");
+      elmInputVarValue.value = '"' + valOld + '"';
+    } else if (valType == "string" && valTypeOld == "number") {
+      elmInputVarValue.setAttribute("type", "text");
+      elmInputVarValue.removeAttribute("step");
+      elmInputVarValue.value = valOld;
+    } else if (valType == "string" && valTypeOld == "js") {
+      elmInputVarValue.setAttribute("type", "text");
+      elmInputVarValue.removeAttribute("step");
+      if (isQuotedString(valOld)) {
+        valOld = valOld.trim();
+        elmInputVarValue.value = valOld.substr(1,valOld.length - 2);
+      } else {
+        elmInputVarValue.value = valOld;
+      }
     } else {
-      elmInputValue.setAttribute("type", "text");
-      elmInputValue.removeAttribute("step");
+      elmInputVarValue.setAttribute("type", "text");
+      elmInputVarValue.removeAttribute("step");
     }
   };
 };
@@ -328,6 +355,7 @@ document.querySelectorAll("*.add-var-set").forEach(function(elm){
     let elmInputVarValue = document.createElement("input");
     elmInputVarValue.classList.add("var-set");
     elmInputVarValue.setAttribute("type", "text");
+    elmInputVarValue.setAttribute("data-value-type", "js");
     elmInputVarValue.style.width = "120pt";
     elmInputVarValue.value = "3.14";
     elmDiv.appendChild(elmInputVarValue);
