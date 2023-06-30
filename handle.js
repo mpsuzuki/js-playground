@@ -496,3 +496,5 @@ let l10nButtons = function() {
 l10nButtons();
 
 $("#code-text").highlightWithinTextarea({highlight: /[^\x00-\x7F]+/g, className: "red"});
+let wnjs = document.getElementById("#warn-no-js");
+wnjs.parentElement.removeChild(wnjs);
