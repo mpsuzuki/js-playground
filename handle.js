@@ -59,6 +59,7 @@ document.getElementById("exec").addEventListener("click", function(){
   let dataItems = document.querySelectorAll("div.input-data > div.data-item");
   let jsDataPromises = [];
   let jsDataInits = [];
+  let varNamesToDeclare = [];
 
   let checkVariableNameSyntax = function(s) {
     return /^[A-Za-z_][0-9A-Za-z_]*/.test(s);
@@ -125,6 +126,7 @@ document.getElementById("exec").addEventListener("click", function(){
 
     /* simple variable-value pair */
     if (dataItems[i].classList.contains("var-name-value-set")) {
+      varNamesToDeclare.push( inputs[0].value );
       let v = inputs[1].value.trim();
       jsDataInits[i]  = "let " + inputs[0].value;
       jsDataInits[i] += " = ";
@@ -148,9 +150,18 @@ document.getElementById("exec").addEventListener("click", function(){
       let varName = inputs[0].value;
       let csvFile = inputs[1].files[0];
       let promise = enqueFileReader (varName, csvFile, jsDataInits, i);
+      varNamesToDeclare.push( inputs[0].value );
       jsDataPromises.push(promise);
     };
   };
+
+  /* variables to be checked after execution should be declared before code snippets */
+  document.querySelectorAll("div.var-name-value-get > input").forEach(function(elmInput){
+    let varName = elmInput.value;
+    if (!varNamesToDeclare.includes(varName)) {
+      jsDataInits.push("let " + varName + " ;");
+    }
+  });
 
   let execJS = function() {
     let jsTextBody = document.getElementById("code-text").value;
