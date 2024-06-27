@@ -356,10 +356,10 @@ let updateVarValueSetterType = function(evt) {
 function handle_varvalue_keyup(evt) {
   let elmInput = evt.target;
   if (elmInput.value.length == 0) {
-    elmInput.previousElementSibling.innerText = ";";
+    elmInput.previousElementSibling.innerHTML = ";&nbsp;&nbsp;";
     elmInput.nextElementSibling.style.opacity = 0;
   } else {
-    elmInput.previousElementSibling.innerText = "=";
+    elmInput.previousElementSibling.innerHTML = "&nbsp;=&nbsp;";
     elmInput.nextElementSibling.style.opacity = 1;
   }
 }
