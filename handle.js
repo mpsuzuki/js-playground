@@ -129,20 +129,25 @@ document.getElementById("exec").addEventListener("click", function(){
       varNamesToDeclare.push( inputs[0].value );
       let v = inputs[1].value.trim();
       jsDataInits[i]  = "let " + inputs[0].value;
-      jsDataInits[i] += " = ";
       if (radio.value == "string") {
         if (!v.includes("'")) {
-          jsDataInits[i] += "'" + v + "' ;";
+          jsDataInits[i] += " = '" + v + "' ;";
         } else
         if (!v.includes('"')) {
-          jsDataInits[i] += '"' + v + '" ;';
+          jsDataInits[i] += ' = "' + v + '" ;';
         } else
         if (!v.includes("`")) {
-          jsDataInits[i] += "`" + v + "` ;";
+          jsDataInits[i] += " = `" + v + "` ;";
         } else
-          jsDataInits[i] += v + " ;";
+        if (v.length > 0)
+          jsDataInits[i] += (" = " + v + " ;");
+        else
+          jsDataInits[i] += " ;";
       } else {
-        jsDataInits[i] += v.trim() + ";";
+        if (v.length > 0)
+          jsDataInits[i] += (" = " + v.trim() + ";");
+        else
+          jsDataInits[i] += ";";
       }
     } else
     /* CSV file loader */
@@ -355,13 +360,20 @@ document.querySelectorAll("*.add-var-set").forEach(function(elm){
     elmDiv.classList.add("data-item");
     elmDiv.classList.add("var-name-value-set");
 
+    let elmSpan = document.createElement("span");
+    elmSpan.innerHTML = "let&nbsp;";
+    elmDiv.appendChild(elmSpan);
+
     let elmInputVarName = document.createElement("input");
     elmInputVarName.setAttribute("type", "text");
     elmInputVarName.style.width = "60pt";
     elmInputVarName.value = ("v" + cntItems.toString());
     elmDiv.appendChild(elmInputVarName);
 
-    elmDiv.appendChild(document.createTextNode("="));
+    elmSpan = document.createElement("span");
+    elmSpan.appendChild(document.createTextNode("="));
+    elmSpan.classList.add("eq");
+    elmDiv.appendChild(elmSpan);
 
     let elmInputVarValue = document.createElement("input");
     elmInputVarValue.classList.add("var-set");
@@ -370,6 +382,10 @@ document.querySelectorAll("*.add-var-set").forEach(function(elm){
     elmInputVarValue.style.width = "120pt";
     elmInputVarValue.value = "3.14";
     elmDiv.appendChild(elmInputVarValue);
+
+    elmSpan = document.createElement("span");
+    elmSpan.appendChild(document.createTextNode(";"));
+    elmDiv.appendChild(elmSpan);
 
     elmDiv.appendChild(document.createTextNode("\n"));
 
