@@ -351,6 +351,21 @@ let updateVarValueSetterType = function(evt) {
   };
 };
 
+function handle_varvalue_keyup(evt) {
+  let elmInput = evt.target;
+  if (elmInput.value.length == 0) {
+    elmInput.previousElementSibling.innerText = ";";
+    elmInput.nextElementSibling.style.opacity = 0;
+  } else {
+    elmInput.previousElementSibling.innerText = "=";
+    elmInput.nextElementSibling.style.opacity = 1;
+  }
+}
+document.querySelectorAll("div.input-data > div.var-name-value-set > input.var-set")
+        .forEach((elmInput) => {
+          elmInput.addEventListener("keyup", handle_varvalue_keyup);
+        });
+
 document.querySelectorAll("*.add-var-set").forEach(function(elm){
   elm.addEventListener("click",function(evt){
     let elmDivParent = evt.currentTarget.parentElement;
@@ -382,6 +397,7 @@ document.querySelectorAll("*.add-var-set").forEach(function(elm){
     elmInputVarValue.style.width = "120pt";
     elmInputVarValue.value = "3.14";
     elmDiv.appendChild(elmInputVarValue);
+    elmDiv.addEventListener("keyup", handle_varvalue_keyup);
 
     elmSpan = document.createElement("span");
     elmSpan.appendChild(document.createTextNode(";"));
