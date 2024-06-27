@@ -11,6 +11,10 @@ div.hwt-container > * {
   font-size: 16pt;
   font-family: "Ricty Diminished", "RD-WOFF";
 }
+div.var-name-value-set > span {
+  font-size: 16pt;
+  font-family: "Ricty Diminished", "RD-WOFF";
+}
 textarea.visible-space {
   font-size: 16pt;
   font-family: "DotLine", "Ricty Diminished", "RD-WOFF";

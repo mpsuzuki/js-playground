@@ -129,20 +129,25 @@ document.getElementById("exec").addEventListener("click", function(){
       varNamesToDeclare.push( inputs[0].value );
       let v = inputs[1].value.trim();
       jsDataInits[i]  = "let " + inputs[0].value;
-      jsDataInits[i] += " = ";
       if (radio.value == "string") {
         if (!v.includes("'")) {
-          jsDataInits[i] += "'" + v + "' ;";
+          jsDataInits[i] += " = '" + v + "' ;";
         } else
         if (!v.includes('"')) {
-          jsDataInits[i] += '"' + v + '" ;';
+          jsDataInits[i] += ' = "' + v + '" ;';
         } else
         if (!v.includes("`")) {
-          jsDataInits[i] += "`" + v + "` ;";
+          jsDataInits[i] += " = `" + v + "` ;";
         } else
-          jsDataInits[i] += v + " ;";
+        if (v.length > 0)
+          jsDataInits[i] += (" = " + v + " ;");
+        else
+          jsDataInits[i] += " ;";
       } else {
-        jsDataInits[i] += v.trim() + ";";
+        if (v.length > 0)
+          jsDataInits[i] += (" = " + v.trim() + ";");
+        else
+          jsDataInits[i] += ";";
       }
     } else
     /* CSV file loader */
@@ -179,8 +184,10 @@ document.getElementById("exec").addEventListener("click", function(){
         jsTextPost += i.toString();
         jsTextPost += '].textContent = typeof(';
         jsTextPost += input.value;
-        jsTextPost += ') === "undefined" ? "*** undefined variable ***" : JSON.stringify(';
-        jsTextPost += input.value;
+        jsTextPost += ') === "undefined" ? "*** undefined variable or undefined value ***" : ';
+        jsTextPost += 'isNaN(' + input.value + ') ? "NaN" : ';
+        jsTextPost += '(Infinity === ' + input.value + ') ? "Infinity" : ';
+        jsTextPost += '(-Infinity === ' + input.value + ') ? "-Infinity" : JSON.stringify(' + input.value;
         jsTextPost += ');\n';
       };
     };
@@ -346,6 +353,21 @@ let updateVarValueSetterType = function(evt) {
   };
 };
 
+function handle_varvalue_keyup(evt) {
+  let elmInput = evt.target;
+  if (elmInput.value.length == 0) {
+    elmInput.previousElementSibling.innerHTML = ";&nbsp;&nbsp;";
+    elmInput.nextElementSibling.style.opacity = 0;
+  } else {
+    elmInput.previousElementSibling.innerHTML = "&nbsp;=&nbsp;";
+    elmInput.nextElementSibling.style.opacity = 1;
+  }
+}
+document.querySelectorAll("div.input-data > div.var-name-value-set > input.var-set")
+        .forEach((elmInput) => {
+          elmInput.addEventListener("keyup", handle_varvalue_keyup);
+        });
+
 document.querySelectorAll("*.add-var-set").forEach(function(elm){
   elm.addEventListener("click",function(evt){
     let elmDivParent = evt.currentTarget.parentElement;
@@ -355,13 +377,20 @@ document.querySelectorAll("*.add-var-set").forEach(function(elm){
     elmDiv.classList.add("data-item");
     elmDiv.classList.add("var-name-value-set");
 
+    let elmSpan = document.createElement("span");
+    elmSpan.innerHTML = "let&nbsp;";
+    elmDiv.appendChild(elmSpan);
+
     let elmInputVarName = document.createElement("input");
     elmInputVarName.setAttribute("type", "text");
     elmInputVarName.style.width = "60pt";
     elmInputVarName.value = ("v" + cntItems.toString());
     elmDiv.appendChild(elmInputVarName);
 
-    elmDiv.appendChild(document.createTextNode("="));
+    elmSpan = document.createElement("span");
+    elmSpan.innerHTML = "&nbsp;=&nbsp;";
+    elmSpan.classList.add("eq");
+    elmDiv.appendChild(elmSpan);
 
     let elmInputVarValue = document.createElement("input");
     elmInputVarValue.classList.add("var-set");
@@ -370,6 +399,11 @@ document.querySelectorAll("*.add-var-set").forEach(function(elm){
     elmInputVarValue.style.width = "120pt";
     elmInputVarValue.value = "3.14";
     elmDiv.appendChild(elmInputVarValue);
+    elmDiv.addEventListener("keyup", handle_varvalue_keyup);
+
+    elmSpan = document.createElement("span");
+    elmSpan.appendChild(document.createTextNode(";"));
+    elmDiv.appendChild(elmSpan);
 
     elmDiv.appendChild(document.createTextNode("\n"));
 
