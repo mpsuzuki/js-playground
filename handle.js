@@ -388,7 +388,7 @@ document.querySelectorAll("*.add-var-set").forEach(function(elm){
     elmDiv.appendChild(elmInputVarName);
 
     elmSpan = document.createElement("span");
-    elmSpan.appendChild(document.createTextNode("="));
+    elmSpan.innerHTML = "&nbsp;=&nbsp;";
     elmSpan.classList.add("eq");
     elmDiv.appendChild(elmSpan);
 
