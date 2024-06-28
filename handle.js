@@ -383,6 +383,7 @@ function handle_varvalue_keyup(evt) {
 document.querySelectorAll("div.input-data > div.var-name-value-set > input.var-set")
         .forEach((elmInput) => {
           elmInput.addEventListener("keyup", handle_varvalue_keyup);
+          elmInput.addEventListener("focusout", handle_varvalue_keyup);
         });
 
 document.querySelectorAll("*.add-var-set").forEach(function(elm){
@@ -399,10 +400,13 @@ document.querySelectorAll("*.add-var-set").forEach(function(elm){
     elmDiv.appendChild(elmSpan);
 
     let elmInputVarName = document.createElement("input");
+    elmInputVarName.classList.add("var-name");
     elmInputVarName.setAttribute("type", "text");
     elmInputVarName.style.width = "60pt";
     elmInputVarName.value = ("v" + cntItems.toString());
     elmDiv.appendChild(elmInputVarName);
+    elmInputVarName.addEventListener("keyup", handle_varname_keyup);
+    elmInputVarName.addEventListener("focusout", handle_varname_keyup);
 
     elmSpan = document.createElement("span");
     elmSpan.innerHTML = "&nbsp;=&nbsp;";
