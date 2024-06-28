@@ -378,6 +378,13 @@ function handle_varname_keyup(evt) {
     document.querySelector("a#exec").style.display = null;
   }
 }
+document.querySelectorAll("div.input-data > div.var-name-value-set > input.var-name")
+        .forEach((elmInput) => {
+          elmInput.addEventListener("keyup", handle_varname_keyup);
+          elmInput.addEventListener("focusout", handle_varname_keyup);
+          elmInput.dispatchEvent(new Event("focusout"));
+        });
+
 function handle_varvalue_keyup(evt) {
   let elmInput = evt.target;
   if (elmInput.value.length == 0) {
