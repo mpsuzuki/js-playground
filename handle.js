@@ -119,7 +119,7 @@ document.getElementById("exec").addEventListener("click", function(){
 
     if (!checkVariableNameSyntax(inputs[0].value)) {
       inputs[0].style.backgroundColor = "pink";
-      return;
+      continue;
     } else {
       inputs[0].style.backgroundColor = null;
     };
