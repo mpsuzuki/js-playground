@@ -353,6 +353,23 @@ let updateVarValueSetterType = function(evt) {
   };
 };
 
+function handle_varname_keyup(evt) {
+  let elmInputVarName = evt.target;
+  let elmInputVarValue = elmInputVarName.parentElement.querySelector("input.var-set");
+  if (elmInputVarName.value.length == 0) {
+    elmInputVarName.style.backgroundColor = "pink";
+    elmInputVarName.previousElementSibling.innerHTML = "/*&nbsp;&nbsp;";
+    elmInputVarValue.disabled = true;
+    elmInputVarValue.nextElementSibling.innerHTML = "&nbsp;*/";
+    document.querySelector("a#exec").style.display = "none";
+  } else {
+    elmInputVarName.style.backgroundColor = null;
+    elmInputVarName.previousElementSibling.innerHTML = "let&nbsp;";
+    elmInputVarValue.disabled = false;
+    elmInputVarValue.nextElementSibling.innerHTML = ";";
+    document.querySelector("a#exec").style.display = null;
+  }
+}
 function handle_varvalue_keyup(evt) {
   let elmInput = evt.target;
   if (elmInput.value.length == 0) {
