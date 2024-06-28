@@ -474,6 +474,9 @@ document.querySelectorAll("*.add-var-set").forEach(function(elm){
     elmDiv.appendChild(document.createTextNode(elmRadioButton.value + " "));
 
     elmDivParent.appendChild(elmDiv);
+
+    document.querySelectorAll("div.input-data > div.var-name-value-set > input.var-name")
+            .forEach((elmInput) => { elmInput.dispatchEvent(new Event("focusout")); });
   });
 });
 
