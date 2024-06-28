@@ -308,6 +308,14 @@ document.querySelectorAll("*.del-last").forEach(function(elm){
       let lastItem = items[items.length - 1];
       lastItem.parentElement.removeChild(lastItem);
     };
+    items = document.querySelectorAll("div.input-data > div.var-name-value-set > input.var-name");
+    if (items.length > 0) {
+      items.forEach((elmInput) => {
+        elmInput.dispatchEvent(new Event("focusout"));
+      });
+    } else {
+      document.querySelector("a#exec").style.display = null;
+    }
   });
 });
 
