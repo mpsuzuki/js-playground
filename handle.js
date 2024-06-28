@@ -399,7 +399,7 @@ document.querySelectorAll("*.add-var-set").forEach(function(elm){
     elmInputVarValue.style.width = "120pt";
     elmInputVarValue.value = "3.14";
     elmDiv.appendChild(elmInputVarValue);
-    elmDiv.addEventListener("keyup", handle_varvalue_keyup);
+    elmInputVarValue.addEventListener("keyup", handle_varvalue_keyup);
 
     elmSpan = document.createElement("span");
     elmSpan.appendChild(document.createTextNode(";"));
