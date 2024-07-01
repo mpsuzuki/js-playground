@@ -185,7 +185,7 @@ document.getElementById("exec").addEventListener("click", function(){
         jsTextPost += '].textContent = typeof(';
         jsTextPost += input.value;
         jsTextPost += ') === "undefined" ? "*** undefined variable or undefined value ***" : ';
-        jsTextPost += 'isNaN(' + input.value + ') ? "NaN" : ';
+        jsTextPost += input.value + '.constructor.name == "Number" && isNaN(' + input.value + ') ? "NaN" : ';
         jsTextPost += '(Infinity === ' + input.value + ') ? "Infinity" : ';
         jsTextPost += '(-Infinity === ' + input.value + ') ? "-Infinity" : JSON.stringify(' + input.value;
         jsTextPost += ');\n';
